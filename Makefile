@@ -20,7 +20,8 @@ $(OBJECTS): $(HEADERS)
 
 .PHONY: install
 install: $(OUT)
-	install -sS -m777 $(OUT) $(PREFIX)/bin
+	install -s $(OUT) $(PREFIX)/lib
+	install -D $(HEADERS) -t $(PREFIX)/include/afeirsa
 
 .PHONY: clean
 clean:
