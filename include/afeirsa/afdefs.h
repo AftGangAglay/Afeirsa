@@ -3,13 +3,16 @@
  * Copyright (C) 2022 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
  */
 
-#ifndef AF_AFEIRSA_H
-#define AF_AFEIRSA_H
+#ifndef AF_DEFS_H
+#define AF_DEFS_H
 
-#include <afeirsa/aftypes.h>
 #include <afeirsa/aferr.h>
-#include <afeirsa/afdefs.h>
-#include <afeirsa/afctx.h>
+
+#ifdef AF_NO_VERIFY
+# define AF_PARAM_CHK(p)
+#else
+# define AF_PARAM_CHK(p) if(!p) return AF_ERR_BAD_PARAM;
+#endif
 
 #endif
 
