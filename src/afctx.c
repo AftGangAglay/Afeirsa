@@ -15,3 +15,8 @@ enum af_err af_mkctx(struct af_ctx* ctx, const struct af_gl_ver* gl_ver) {
 	return AF_ERR_NONE;
 }
 
+enum af_err af_killctx(struct af_ctx* ctx) {
+	AF_CTX_CHK(ctx);
+
+	return AF_ERR_NONE;
+}
