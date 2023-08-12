@@ -12,6 +12,13 @@ PREFIX = /usr/local
 .DEFAULT_GOAL := all
 .PHONY: all
 all: $(OUT)
+ifdef BUILD_EXAMPLES
+all: examples
+endif
+
+.PHONY: examples
+examples:
+	$(MAKE) -fexamples/Makefile EXAMPLES_DIR=examples
 
 $(OUT): $(OBJECTS)
 	$(AR) rcs $@ $^
@@ -27,3 +34,4 @@ install: $(OUT)
 clean:
 	rm -f $(OBJECTS)
 	rm -f $(OUT)
+	$(MAKE) -Cexamples clean
