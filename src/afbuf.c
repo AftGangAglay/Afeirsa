@@ -25,7 +25,9 @@ static af_uint_t af_gl_buf_type(enum af_buf_type type) {
 	}
 }
 
-enum af_err af_mkbuf(struct af_ctx* ctx, struct af_buf* buf, enum af_buf_type type) {
+enum af_err af_mkbuf(
+		struct af_ctx* ctx, struct af_buf* buf, enum af_buf_type type) {
+
     af_uint_t gl_type = af_gl_buf_type(type);
 
 	AF_CTX_CHK(ctx);
