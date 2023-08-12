@@ -1,2 +1,9 @@
 *.o
 *.a
+
+examples/*
+!examples/*.c
+
+.idea
+.vs
+.vscode
