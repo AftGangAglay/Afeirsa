@@ -26,6 +26,13 @@ typedef af_sshort_t  af_sint16_t;
 typedef af_sint_t    af_sint32_t; 
 typedef af_slong_t   af_sint64_t;
 
+typedef af_ulong_t af_size_t;
+
+typedef af_uchar_t af_bool_t;
+
+#define AF_TRUE (1)
+#define AF_FALSE (0)
+
 #endif
 
 

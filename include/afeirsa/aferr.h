@@ -6,13 +6,29 @@
 #ifndef AF_ERR_H
 #define AF_ERR_H
 
+#include <afeirsa/aftypes.h>
+
 enum af_err {
 	AF_ERR_NONE,
-	AF_ERR_BAD_PARAM,
-	AF_ERR_BAD_CTX
+	AF_ERR_UNKNOWN,
+    AF_ERR_BAD_PARAM,
+	AF_ERR_BAD_CTX,
+    AF_ERR_BAD_OP,
+    AF_ERR_MEM
 };
 
-typedef void (*af_err_callback_t)(enum af_err, const char*);
+enum af_err af_err_from_gl(af_uint_t gl_err);
+
+/*
+ * NOTE: We rely on the user to include GL for this to
+ * 	 avoid polluting the global public API with GL
+ * 	 includes.
+ */
+#define AF_GL_CHK \
+		do { \
+			enum af_err err = af_err_from_gl(glGetError()); \
+			if(err) return err; \
+		} while(0)
 
 #endif
 

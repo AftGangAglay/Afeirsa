@@ -10,9 +10,13 @@
 
 #ifdef AF_NO_VERIFY
 # define AF_PARAM_CHK(p)
+# define AF_CTX_CHK(p)
 #else
-# define AF_PARAM_CHK(p) if(!p) return AF_ERR_BAD_PARAM;
+# define AF_PARAM_CHK(p) if(!p) return AF_ERR_BAD_PARAM
+# define AF_CTX_CHK(p) if(!p) return AF_ERR_BAD_CTX
 #endif
+
+#define AF_ARRLEN(arr) (sizeof((arr)) / sizeof((arr)[0]))
 
 #endif
 
