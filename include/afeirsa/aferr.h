@@ -11,10 +11,10 @@
 enum af_err {
 	AF_ERR_NONE,
 	AF_ERR_UNKNOWN,
-    AF_ERR_BAD_PARAM,
+	AF_ERR_BAD_PARAM,
 	AF_ERR_BAD_CTX,
-    AF_ERR_BAD_OP,
-    AF_ERR_MEM
+	AF_ERR_BAD_OP,
+	AF_ERR_MEM
 };
 
 enum af_err af_err_from_gl(af_uint_t gl_err);

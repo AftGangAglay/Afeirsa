@@ -10,8 +10,8 @@
 #include <afeirsa/aferr.h>
 
 struct af_gl_ver {
-        af_uint_t major;
-        af_uint_t minor;
+	af_uint_t major;
+	af_uint_t minor;
 };
 
 typedef void (*af_free_t)(void*);

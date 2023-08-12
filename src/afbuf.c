@@ -28,38 +28,38 @@ static af_uint_t af_gl_buf_type(enum af_buf_type type) {
 enum af_err af_mkbuf(
 		struct af_ctx* ctx, struct af_buf* buf, enum af_buf_type type) {
 
-    af_uint_t gl_type = af_gl_buf_type(type);
+	af_uint_t gl_type = af_gl_buf_type(type);
 
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(buf);
 
-    buf->type = type;
+	buf->type = type;
 
-    if(ctx->features.buffers && gl_type) {
+	if(ctx->features.buffers && gl_type) {
 #ifdef GL_VERSION_2_0
-        buf->native = AF_TRUE;
+		buf->native = AF_TRUE;
 
-        glGenBuffers(1, &buf->gl_handle);
+		glGenBuffers(1, &buf->gl_handle);
 		AF_GL_CHK;
 
-        /* We don't mind leaving stale state in bind points. */
+		/* We don't mind leaving stale state in bind points. */
 		glBindBuffer(gl_type, buf->gl_handle);
 		AF_GL_CHK;
 
-        return AF_ERR_NONE;
+		return AF_ERR_NONE;
 #endif
 	}
 
-    buf->native = AF_FALSE;
+	buf->native = AF_FALSE;
 
-    return AF_ERR_NONE;
+	return AF_ERR_NONE;
 }
 
 enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 	AF_CTX_CHK(ctx);
 
 	if(ctx->features.buffers) {
-        /* TODO: Native buffering cleanup */
+		/* TODO: Native buffering cleanup */
 	}
 	else {
 		ctx->free(buf->storage);
