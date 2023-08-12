@@ -10,6 +10,7 @@
 #include <afeirsa/aferr.h>
 #include <afeirsa/afdefs.h>
 #include <afeirsa/afctx.h>
+#include <afeirsa/afbuf.h>
 
 #endif
 
