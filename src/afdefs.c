@@ -20,3 +20,14 @@ void* af_memcpy(void* dst, const void* src, af_size_t n) {
 	return dst;
 #endif
 }
+
+void* af_memset(void* dst, int c, af_size_t n) {
+#ifdef USE_STDLIB
+	return memset(dst, c, n);
+#else
+	af_size_t i;
+	for(i = 0; i < n; ++i) ((char*) dst)[i] = c;
+
+	return dst;
+#endif
+}

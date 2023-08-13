@@ -78,6 +78,8 @@ enum af_err af_upload(
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(buf);
 
+	buf->size = size;
+
 	if(buf->native) {
 #ifdef GL_VERSION_2_0
 		/* TODO: Native buffer upload */

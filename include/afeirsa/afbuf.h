@@ -22,6 +22,7 @@ struct af_buf {
 	af_uint_t gl_handle;
 	enum af_buf_type type;
 	void* storage;
+	af_size_t size;
 	af_bool_t native;
 };
 

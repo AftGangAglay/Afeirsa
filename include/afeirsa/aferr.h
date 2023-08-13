@@ -26,8 +26,11 @@ enum af_err af_err_from_gl(af_uint_t gl_err);
  */
 #define AF_GL_CHK \
 		do { \
-			enum af_err err = af_err_from_gl(glGetError()); \
-			if(err) return err; \
+			af_uint_t gl_err; \
+			while(( gl_err = glGetError() )) { \
+	            enum af_err err = af_err_from_gl(gl_err); \
+				if(err) return err; \
+			} \
 		} while(0)
 
 #endif

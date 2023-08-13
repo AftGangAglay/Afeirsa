@@ -3,17 +3,15 @@
  * Copyright (C) 2022 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
  */
 
-#ifndef AF_AFEIRSA_H
-#define AF_AFEIRSA_H
+#ifndef AF_DRAW_H
+#define AF_DRAW_H
 
-#include <afeirsa/aftypes.h>
 #include <afeirsa/aferr.h>
-#include <afeirsa/afdefs.h>
 #include <afeirsa/afctx.h>
 #include <afeirsa/afbuf.h>
 #include <afeirsa/afvert.h>
-#include <afeirsa/afdraw.h>
+
+enum af_err af_drawbuf(
+		struct af_ctx* ctx, struct af_buf* buf, struct af_vert* vert);
 
 #endif
-
-

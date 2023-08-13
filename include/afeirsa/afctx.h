@@ -18,6 +18,10 @@ typedef void (*af_free_t)(void*);
 typedef void* (*af_malloc_t)(af_size_t);
 typedef void* (*af_realloc_t)(void*, af_size_t);
 
+struct af_features {
+	af_bool_t buffers; /* TODO: Criteria for this? */
+};
+
 struct af_ctx {
 	struct af_gl_ver gl_ver;
 
@@ -25,9 +29,7 @@ struct af_ctx {
 	af_malloc_t malloc;
 	af_realloc_t realloc;
 
-	struct {
-		af_bool_t buffers; /* TODO: Criteria for this? */
-	} features;
+	struct af_features features;
 };
 
 enum af_err af_mkctx(struct af_ctx* ctx, const struct af_gl_ver* gl_ver);
