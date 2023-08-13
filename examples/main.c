@@ -31,9 +31,9 @@ int main(void) {
 	struct af_gl_ver gl_ver = { 1, 0 };
 
 	struct vertex vertices[] = {
-		{ {  0.0f, 0.5f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-		{ {  0.5f, 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-		{ { -0.5f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+		{ {  0.0f,  1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+		{ {  1.0f, -1.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+		{ { -1.0f, -1.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
 	};
 
 	struct af_vert_element vert_elements[] = {
@@ -47,7 +47,7 @@ int main(void) {
 	struct af_buf vbuf;
 	struct af_vert vert;
 
-	AF_CHK(af_mkctx(&ctx, &gl_ver));
+	AF_CHK(af_mkctx(&ctx, &gl_ver, AF_FIDELITY_FAST));
 	AF_CHK(af_mkbuf(&ctx, &vbuf, AF_BUF_VERTEX));
 	AF_CHK(af_mkvert(&ctx, &vert, vert_elements, AF_ARRLEN(vert_elements)));
 

@@ -16,6 +16,17 @@
 # undef GL_SILENCE_DEPRECATION
 #endif
 
+#include <afeirsa/aferr.h>
+
+#define AF_GL_CHK \
+	do { \
+		enum af_err err = af_gl_chk(); \
+		if(err) return err; \
+	} while(0)
+
+enum af_err af_gl_chk(void);
+void af_gl_err_clear(void);
+
 #endif
 
 

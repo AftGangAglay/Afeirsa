@@ -9,6 +9,12 @@
 #include <afeirsa/aftypes.h>
 #include <afeirsa/aferr.h>
 
+enum af_fidelity {
+	AF_FIDELITY_NONE,
+	AF_FIDELITY_NICE,
+	AF_FIDELITY_FAST
+};
+
 struct af_gl_ver {
 	af_uint_t major;
 	af_uint_t minor;
@@ -32,7 +38,9 @@ struct af_ctx {
 	struct af_features features;
 };
 
-enum af_err af_mkctx(struct af_ctx* ctx, const struct af_gl_ver* gl_ver);
+enum af_err af_mkctx(
+		struct af_ctx* ctx, const struct af_gl_ver* gl_ver,
+		enum af_fidelity fidelity);
 enum af_err af_killctx(struct af_ctx* ctx);
 
 #endif

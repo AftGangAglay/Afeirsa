@@ -7,6 +7,7 @@
 #define AF_DEFS_H
 
 #include <afeirsa/aferr.h>
+#include <afeirsa/aftypes.h>
 
 #ifdef AF_NO_VERIFY
 # define AF_PARAM_CHK(ctx)
