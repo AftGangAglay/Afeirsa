@@ -7,8 +7,6 @@
 #include <afeirsa/afdefs.h>
 #include <afeirsa/afdraw.h>
 
-#include <stdio.h>
-
 enum af_err af_drawbuf(
 		struct af_ctx* ctx, struct af_buf* buf, struct af_vert* vert) {
 
