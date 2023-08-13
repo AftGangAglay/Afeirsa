@@ -4,8 +4,11 @@ OBJECTS = $(SOURCES:.c=.o)
 
 OUT = src/libafeirsa.a
 
-CFLAGS += -Iinclude
+CFLAGS += -Iinclude -glldb -O0
 CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
+ifdef USE_STDLIB
+CFLAGS += -DUSE_STDLIB
+endif
 
 PREFIX = /usr/local
 

@@ -57,13 +57,37 @@ enum af_err af_mkbuf(
 
 enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 	AF_CTX_CHK(ctx);
+	AF_PARAM_CHK(buf);
 
-	if(ctx->features.buffers) {
+	if(buf->native) {
+#ifdef GL_VERSION_2_0
 		/* TODO: Native buffering cleanup */
+		return AF_ERR_NONE;
+#endif
 	}
-	else {
-		ctx->free(buf->storage);
+
+	ctx->free(buf->storage);
+
+	return AF_ERR_NONE;
+}
+
+enum af_err af_upload(
+		struct af_ctx* ctx, struct af_buf* buf,
+		const void* data, af_size_t size) {
+
+	AF_CTX_CHK(ctx);
+	AF_PARAM_CHK(buf);
+
+	if(buf->native) {
+#ifdef GL_VERSION_2_0
+		/* TODO: Native buffer upload */
+		return AF_ERR_NONE;
+#endif
 	}
+
+	if(!( buf->storage = ctx->malloc(size) )) return AF_ERR_MEM;
+
+	af_memcpy(buf->storage, data, size);
 
 	return AF_ERR_NONE;
 }

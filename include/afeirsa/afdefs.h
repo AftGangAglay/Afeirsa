@@ -18,6 +18,8 @@
 
 #define AF_ARRLEN(arr) (sizeof((arr)) / sizeof((arr)[0]))
 
+void* af_memcpy(void* dst, const void* src, af_size_t n);
+
 #endif
 
 

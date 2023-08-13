@@ -29,6 +29,10 @@ enum af_err af_mkbuf(
 		struct af_ctx* ctx, struct af_buf* buf, enum af_buf_type type);
 enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf);
 
+enum af_err af_upload(
+		struct af_ctx* ctx, struct af_buf* buf,
+		const void* data, af_size_t size);
+
 #endif
 
 

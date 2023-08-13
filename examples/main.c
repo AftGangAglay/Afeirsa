@@ -33,6 +33,8 @@ int main(void) {
 	AF_CHK(af_mkctx(&ctx, &gl_ver));
 	AF_CHK(af_mkbuf(&ctx, &vbuf, AF_BUF_VERTEX));
 
+	AF_CHK(af_upload(&ctx, &vbuf, vertices, sizeof(vertices)));
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	while(!glfwWindowShouldClose(window)) {
 		af_size_t i;

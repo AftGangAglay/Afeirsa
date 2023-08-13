@@ -16,7 +16,7 @@ struct af_gl_ver {
 
 typedef void (*af_free_t)(void*);
 typedef void* (*af_malloc_t)(af_size_t);
-typedef void* (*af_realloc_t)(void*);
+typedef void* (*af_realloc_t)(void*, af_size_t);
 
 struct af_ctx {
 	struct af_gl_ver gl_ver;
