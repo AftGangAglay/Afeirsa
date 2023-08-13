@@ -4,10 +4,13 @@ OBJECTS = $(SOURCES:.c=.o)
 
 OUT = src/libafeirsa.a
 
-CFLAGS += -Iinclude -glldb -O0
+CFLAGS += -Iinclude
 CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
 ifdef USE_STDLIB
 CFLAGS += -DUSE_STDLIB
+endif
+ifdef DEBUG
+CFLAGS += -glldb -O0
 endif
 
 PREFIX = /usr/local
@@ -15,14 +18,6 @@ PREFIX = /usr/local
 .DEFAULT_GOAL := all
 .PHONY: all
 all: $(OUT)
-ifdef BUILD_EXAMPLES
-all: examples
-endif
-
-.PHONY: examples
-examples:
-	$(MAKE) -fexamples/Makefile EXAMPLES_DIR=examples
-
 $(OUT): $(OBJECTS)
 	$(AR) rcs $@ $^
 
@@ -37,4 +32,7 @@ install: $(OUT)
 clean:
 	rm -f $(OBJECTS)
 	rm -f $(OUT)
-	$(MAKE) -Cexamples clean
+
+ifdef BUILD_EXAMPLES
+include examples/examples.mk
+endif
