@@ -10,7 +10,9 @@ ifdef USE_STDLIB
 CFLAGS += -DUSE_STDLIB
 endif
 ifdef DEBUG
-CFLAGS += -glldb -O0
+CFLAGS += -glldb -O0 -D_DEBUG
+else
+CFLAGS += -DNDEBUG
 endif
 
 PREFIX = /usr/local
