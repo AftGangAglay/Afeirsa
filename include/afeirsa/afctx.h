@@ -31,9 +31,16 @@ struct af_features {
 struct af_ctx {
 	struct af_gl_ver gl_ver;
 
+	/*
+	 * NOTE: These need to be set before the initial call to `af_mkctx' if
+	 * 		 `USE_STDLIB' is not defined.
+	 */
 	af_free_t free;
 	af_malloc_t malloc;
 	af_realloc_t realloc;
+
+	af_size_t extensions_len;
+	char** extensions;
 
 	struct af_features features;
 };

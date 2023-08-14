@@ -35,6 +35,8 @@
 void* af_memcpy(void* dst, const void* src, af_size_t n);
 void* af_memset(void* dst, int c, af_size_t n);
 
+af_size_t af_strlen(const char* s);
+
 #endif
 
 

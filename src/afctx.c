@@ -18,6 +18,7 @@ enum af_err af_mkctx(
 		enum af_fidelity fidelity) {
 
 	enum af_err err;
+	const char* extensions;
 
 	AF_PARAM_CHK(ctx);
 	AF_PARAM_CHK(gl_ver);
@@ -34,6 +35,41 @@ enum af_err af_mkctx(
 	ctx->free = free;
 	ctx->realloc = realloc;
 #endif
+
+	extensions = (const char*) glGetString(GL_EXTENSIONS);
+
+	/*
+	 * It's unclear what the empty extension list will be, so NULL or len<2
+	 * Seem like sensible assumptions.
+	 */
+	if(extensions && af_strlen(extensions) > 2) {
+		af_size_t n = 0;
+		af_size_t i;
+
+		ctx->extensions = 0;
+		ctx->extensions_len = 0;
+		for(i = 0; extensions[i]; ++i) {
+			++n;
+			if(extensions[i] == ' ') {
+				char* extp;
+
+				ctx->extensions = ctx->realloc(
+					ctx->extensions,
+					++ctx->extensions_len * sizeof(const char*));
+				if(!ctx->extensions) return AF_ERR_MEM;
+
+				extp =
+					(ctx->extensions[ctx->extensions_len - 1]
+						= ctx->malloc(n));
+				if(!extp) return AF_ERR_MEM;
+
+				af_memcpy(extp, &extensions[i] - (n - 1), n - 1);
+				extp[n - 1] = 0;
+
+				n = 0;
+			}
+		}
+	}
 
 	return AF_ERR_NONE;
 }

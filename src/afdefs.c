@@ -31,3 +31,13 @@ void* af_memset(void* dst, int c, af_size_t n) {
 	return dst;
 #endif
 }
+
+af_size_t af_strlen(const char* s) {
+#ifdef USE_STDLIB
+	return strlen(s);
+#else
+	af_size_t n;
+	for(n = 0; s[n]; ++n) continue;
+	return n;
+#endif
+}
