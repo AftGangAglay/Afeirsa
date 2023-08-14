@@ -11,24 +11,35 @@ enum af_err af_mkvert(
 		const struct af_vert_element* elements, af_size_t len) {
 
 	af_size_t i;
+	af_size_t req;
 
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(vert);
 	AF_PARAM_CHK(elements);
 
 	vert->stride = 0;
+
 	for(i = 0; i < len; ++i) {
 		switch(elements[i].type) {
-			default: break;
-			case AF_VERT_COL:
-				AF_FALLTHROUGH;
-				/* FALLTHRU */
+			default: {
+				req = 0;
+				break;
+			}
+			case AF_VERT_COL: {
+				req = 4;
+				break;
+			}
 			case AF_VERT_POS: {
-				AF_VERIFY(
-					elements[i].size == sizeof(float[4]), AF_ERR_BAD_PARAM);
+				req = 4;
+				break;
+			}
+			case AF_VERT_UV: {
+				req = 4;
 				break;
 			}
 		}
+
+		AF_VERIFY(elements[i].size == sizeof(float) * req, AF_ERR_BAD_PARAM);
 
 		vert->stride += elements[i].size;
 	}

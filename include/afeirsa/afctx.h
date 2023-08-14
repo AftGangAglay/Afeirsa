@@ -43,4 +43,6 @@ enum af_err af_mkctx(
 		enum af_fidelity fidelity);
 enum af_err af_killctx(struct af_ctx* ctx);
 
+enum af_err af_setview(struct af_ctx* ctx, af_uint_t w, af_uint_t h);
+
 #endif

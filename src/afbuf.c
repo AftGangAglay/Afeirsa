@@ -11,9 +11,6 @@ static af_uint_t af_gl_buf_type(enum af_buf_type type) {
 	switch(type) {
 		case AF_BUF_VERTEX:  return GL_ARRAY_BUFFER;
 		case AF_BUF_INDEX:   return GL_ELEMENT_ARRAY_BUFFER;
-#ifdef GL_TEXTURE_BUFFER
-		case AF_BUF_TEXTURE: return GL_TEXTURE_BUFFER;
-#endif
 #ifdef GL_UNIFORM_BUFFER
 		case AF_BUF_UNIFORM: return GL_UNIFORM_BUFFER;
 #endif
@@ -35,17 +32,20 @@ enum af_err af_mkbuf(
 
 	buf->type = type;
 
+	/*
+	 * Textures are obviously separate entities in GL but this makes the API
+	 * Nice and consistent between buffers and textures, so it's nice.
+	 */
+	if(type == AF_BUF_TEXTURE) {
+
+		return AF_ERR_NONE;
+	}
+
 	if(ctx->features.buffers && gl_type) {
 #ifdef GL_VERSION_2_0
 		buf->native = AF_TRUE;
 
-		glGenBuffers(1, &buf->gl_handle);
-		AF_GL_CHK;
-
-		/* We don't mind leaving stale state in bind points. */
-		glBindBuffer(gl_type, buf->gl_handle);
-		AF_GL_CHK;
-
+		/* TODO: Native buffer init */
 		return AF_ERR_NONE;
 #endif
 	}
@@ -61,7 +61,7 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 
 	if(buf->native) {
 #ifdef GL_VERSION_2_0
-		/* TODO: Native buffering cleanup */
+		/* TODO: Native buffer cleanup */
 		return AF_ERR_NONE;
 #endif
 	}

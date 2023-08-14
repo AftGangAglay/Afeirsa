@@ -44,6 +44,15 @@ enum af_err af_killctx(struct af_ctx* ctx) {
 	return AF_ERR_NONE;
 }
 
+enum af_err af_setview(struct af_ctx* ctx, af_uint_t w, af_uint_t h) {
+	AF_CTX_CHK(ctx);
+
+	glViewport(0, 0, (int) w, (int) h);
+	AF_GL_CHK;
+
+	return AF_ERR_NONE;
+}
+
 static enum af_err af_set_gl_hints(enum af_fidelity fidelity) {
 	af_uint_t mode;
 	af_size_t i;
