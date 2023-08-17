@@ -35,9 +35,9 @@ int main(void) {
 
 	struct vertex vertices[] = {
 		{
-			{  0.0f,  1.0f, 0.0f, 1.0f },
-			/* {  1.0f,  0.0f, 0.0f, 1.0f }, */
-			{  0.0f,  1.0f, 0.0f, 1.0f }
+			{ -1.0f, -1.0f, 0.0f, 1.0f },
+			/* {  0.0f,  0.0f, 1.0f, 1.0f }, */
+			{  0.0f,  0.0f, 0.0f, 1.0f }
 		},
 		{
 			{  1.0f, -1.0f, 0.0f, 1.0f },
@@ -45,9 +45,9 @@ int main(void) {
 			{  1.0f,  0.0f, 0.0f, 1.0f }
 		},
 		{
-			{ -1.0f, -1.0f, 0.0f, 1.0f },
-			/* {  0.0f,  0.0f, 1.0f, 1.0f }, */
-			{  0.0f,  0.0f, 0.0f, 1.0f }
+			{  0.0f,  1.0f, 0.0f, 1.0f },
+			/* {  1.0f,  0.0f, 0.0f, 1.0f }, */
+			{  0.0f,  1.0f, 0.0f, 1.0f }
 		}
 	};
 
@@ -81,27 +81,35 @@ int main(void) {
 			tex[i] = rand();
 		}
 
+		/*
+		glEnable(GL_LIGHTING);
+		AF_GL_CHK;
+		glEnable(GL_CULL_FACE);
+		AF_GL_CHK;
+*/
+		glEnable(GL_DEPTH_TEST);
+		AF_GL_CHK;
+
+
+		glEnable(GL_TEXTURE_2D);
+		AF_GL_CHK;
+
 		glTexImage2D(
 			GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0,
 			GL_RGBA, GL_UNSIGNED_BYTE, tex);
 		AF_GL_CHK;
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		AF_GL_CHK;
 	}
 
 	while(!glfwWindowShouldClose(window)) {
 		enum af_err result;
-		glClear(GL_COLOR_BUFFER_BIT);
-		AF_GL_CHK;
-
-		glEnable(GL_TEXTURE_2D);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		AF_GL_CHK;
 
 		result = af_drawbuf(&ctx, &vbuf, &vert);
 		AF_CHK(result);
-
-		glDisable(GL_TEXTURE_2D);
-		AF_GL_CHK;
 
 		glfwPollEvents();
 		glfwSwapBuffers(window);

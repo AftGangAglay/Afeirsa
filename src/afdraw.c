@@ -70,3 +70,16 @@ enum af_err af_drawbuf(
 
 	return AF_ERR_NONE;
 }
+
+enum af_err af_mkdrawlist(
+		struct af_ctx* ctx, struct af_drawlist* drawlist,
+		struct af_drawop* ops, af_size_t len) {
+
+	AF_CTX_CHK(ctx);
+	AF_PARAM_CHK(drawlist);
+	AF_PARAM_CHK(ops);
+
+	(void) len;
+
+	return AF_ERR_NONE;
+}

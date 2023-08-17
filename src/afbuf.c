@@ -37,7 +37,6 @@ enum af_err af_mkbuf(
 	 * Nice and consistent between buffers and textures, so it's nice.
 	 */
 	if(type == AF_BUF_TEXTURE) {
-
 		return AF_ERR_NONE;
 	}
 
