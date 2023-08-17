@@ -12,7 +12,7 @@ endif
 ifdef DEBUG
 CFLAGS += -g -O0 -D_DEBUG
 else
-CFLAGS += -DNDEBUG
+CFLAGS += -Ofast -DNDEBUG
 endif
 
 PREFIX = /usr/local
@@ -27,8 +27,15 @@ $(OBJECTS): $(HEADERS)
 
 .PHONY: install
 install: $(OUT)
+ifeq ($(shell uname -s),Darwin)
+	strip -x $(OUT)
+	install $(OUT) $(PREFIX)/lib
+	mkdir $(PREFIX)/afeirsa
+	install $(HEADERS) $(PREFIX)/include/afeirsa
+else
 	install -s $(OUT) $(PREFIX)/lib
 	install -D $(HEADERS) -t $(PREFIX)/include/afeirsa
+endif
 
 .PHONY: clean
 clean:
