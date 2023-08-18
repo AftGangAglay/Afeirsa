@@ -36,9 +36,14 @@ int main(void) {
 
 	struct vertex vertices[] = {
 		{
-			{ -1.0f, -1.0f, 0.0f, 1.0f },
-			/* {  0.0f,  0.0f, 1.0f, 1.0f }, */
-			{  0.0f,  0.0f, 0.0f, 1.0f }
+			{ -1.0f,  1.0f, 0.0f, 1.0f },
+			/* {  1.0f,  0.0f, 0.0f, 1.0f }, */
+			{  0.0f,  1.0f, 0.0f, 1.0f }
+		},
+		{
+			{  1.0f,  1.0f, 0.0f, 1.0f },
+			/* {  0.0f,  1.0f, 0.0f, 1.0f }, */
+			{  1.0f,  1.0f, 0.0f, 1.0f }
 		},
 		{
 			{  1.0f, -1.0f, 0.0f, 1.0f },
@@ -46,9 +51,9 @@ int main(void) {
 			{  1.0f,  0.0f, 0.0f, 1.0f }
 		},
 		{
-			{  0.0f,  1.0f, 0.0f, 1.0f },
-			/* {  1.0f,  0.0f, 0.0f, 1.0f }, */
-			{  0.0f,  1.0f, 0.0f, 1.0f }
+			{ -1.0f, -1.0f, 0.0f, 1.0f },
+			/* {  0.0f,  0.0f, 1.0f, 1.0f }, */
+			{  0.0f,  0.0f, 0.0f, 1.0f }
 		}
 	};
 
@@ -68,6 +73,7 @@ int main(void) {
 	struct af_drawop drawop = { AF_DRAWBUF, { 0 } };
 	drawop.data.drawbuf.vert = &vert;
 	drawop.data.drawbuf.buf = &vbuf;
+	drawop.data.drawbuf.primitive = AF_TRIANGLE_FAN;
 
 	srand(time(0));
 

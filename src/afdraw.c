@@ -7,8 +7,24 @@
 #include <afeirsa/afdefs.h>
 #include <afeirsa/afdraw.h>
 
+static af_uint_t af_gl_primitive(enum af_primitive primitive) {
+	switch(primitive) {
+		case AF_TRIANGLES: return GL_TRIANGLES;
+        case AF_TRIANGLE_STRIP: return GL_TRIANGLE_STRIP;
+        case AF_TRIANGLE_FAN: return GL_TRIANGLE_FAN;
+		case AF_LINES: return GL_LINES;
+        case AF_LINE_STRIP: return GL_LINE_STRIP;
+        case AF_LINE_LOOP: return GL_LINE_LOOP;
+		case AF_QUADS: return GL_QUADS;
+        case AF_QUAD_STRIP: return GL_QUAD_STRIP;
+		case AF_POINTS: return GL_POINTS;
+		case AF_POLYGON: return GL_POLYGON;
+	}
+}
+
 enum af_err af_drawbuf(
-		struct af_ctx* ctx, struct af_buf* buf, struct af_vert* vert) {
+		struct af_ctx* ctx, struct af_buf* buf, struct af_vert* vert,
+		enum af_primitive primitive) {
 
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(buf);
@@ -21,7 +37,7 @@ enum af_err af_drawbuf(
 #endif
 	}
 
-	glBegin(GL_TRIANGLES);
+	glBegin(af_gl_primitive(primitive));
 	{
 		af_size_t i;
 		for(i = 0; i < buf->size; i += vert->stride) {
@@ -114,7 +130,9 @@ enum af_err af_mkdrawlist(
 					case AF_DRAWBUF: {
 						struct af_drawop_drawbuf* drawbuf =
 							&ops[i].data.drawbuf;
-						AF_CHK(af_drawbuf(ctx, drawbuf->buf, drawbuf->vert));
+						AF_CHK(af_drawbuf(
+								ctx, drawbuf->buf, drawbuf->vert,
+								drawbuf->primitive));
 						break;
 					}
 					case AF_RUNDRAW: {

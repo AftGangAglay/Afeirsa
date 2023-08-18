@@ -30,6 +30,22 @@ enum af_drawop_type {
 	AF_RUNDRAW
 };
 
+enum af_primitive {
+	AF_TRIANGLES,
+	AF_TRIANGLE_STRIP,
+	AF_TRIANGLE_FAN,
+
+	AF_LINES,
+	AF_LINE_STRIP,
+	AF_LINE_LOOP,
+
+	AF_QUADS,
+	AF_QUAD_STRIP,
+
+	AF_POINTS,
+	AF_POLYGON
+};
+
 struct af_drawlist;
 struct af_drawop {
 	enum af_drawop_type type;
@@ -37,6 +53,7 @@ struct af_drawop {
 		struct af_drawop_drawbuf {
 			struct af_buf* buf;
 			struct af_vert* vert;
+			enum af_primitive primitive;
 		} drawbuf;
 		struct af_buf* settex;
 		/* TODO: Mat */
@@ -52,7 +69,8 @@ struct af_drawlist {
 };
 
 enum af_err af_drawbuf(
-		struct af_ctx* ctx, struct af_buf* buf, struct af_vert* vert);
+		struct af_ctx* ctx, struct af_buf* buf, struct af_vert* vert,
+		enum af_primitive primitive);
 
 enum af_err af_mkdrawlist(
 		struct af_ctx* ctx, struct af_drawlist* drawlist,
