@@ -27,15 +27,18 @@ $(OBJECTS): $(HEADERS)
 
 .PHONY: install
 install: $(OUT)
+	-mkdir -p $(PREFIX)/include/afeirsa
+	-mkdir -p $(PREFIX)/lib/pkgconfig
 ifeq ($(shell uname -s),Darwin)
-	strip -x $(OUT)
 	install $(OUT) $(PREFIX)/lib
-	mkdir $(PREFIX)/afeirsa
-	install $(HEADERS) $(PREFIX)/include/afeirsa
+	strip -x $(OUT)
 else
 	install -s $(OUT) $(PREFIX)/lib
-	install -D $(HEADERS) -t $(PREFIX)/include/afeirsa
 endif
+	install $(HEADERS) $(PREFIX)/include/afeirsa
+
+	echo "prefix=$(PREFIX)" > $(PREFIX)/lib/pkgconfig/afeirsa.pc
+	cat build/afeirsa.pc.in >> $(PREFIX)/lib/pkgconfig/afeirsa.pc
 
 .PHONY: clean
 clean:

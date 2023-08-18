@@ -1,0 +1,8 @@
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: Afeirsa
+Version: 1.0.0
+Description: OpenGL Version-Agnostic Abstraction
+Libs: -L${libdir} -lafeirsa
+Cflags: -I${includedir}
