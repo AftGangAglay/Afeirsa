@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#undef AF_CHK
 #define AF_CHK(c) \
 	do { \
 		if(c) { \
@@ -60,16 +61,24 @@ int main(void) {
 	struct af_ctx ctx;
 	GLFWwindow* window = make_glfw(&gl_ver, &ctx);
 
+	struct af_drawlist drawlist;
 	struct af_buf vbuf;
 	struct af_vert vert;
+
+	struct af_drawop drawop = { AF_DRAWBUF, { 0 } };
+	drawop.data.drawbuf.vert = &vert;
+	drawop.data.drawbuf.buf = &vbuf;
 
 	srand(time(0));
 
 	AF_CHK(af_mkctx(&ctx, &gl_ver, AF_FIDELITY_FAST));
-	AF_CHK(af_mkbuf(&ctx, &vbuf, AF_BUF_VERTEX));
+
 	AF_CHK(af_mkvert(&ctx, &vert, vert_elements, AF_ARRLEN(vert_elements)));
 
+	AF_CHK(af_mkbuf(&ctx, &vbuf, AF_BUF_VERTEX));
 	AF_CHK(af_upload(&ctx, &vbuf, vertices, sizeof(vertices)));
+
+	AF_CHK(af_mkdrawlist(&ctx, &drawlist, &drawop, 1));
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	AF_GL_CHK;
@@ -81,15 +90,8 @@ int main(void) {
 			tex[i] = rand();
 		}
 
-		/*
-		glEnable(GL_LIGHTING);
-		AF_GL_CHK;
-		glEnable(GL_CULL_FACE);
-		AF_GL_CHK;
-*/
 		glEnable(GL_DEPTH_TEST);
 		AF_GL_CHK;
-
 
 		glEnable(GL_TEXTURE_2D);
 		AF_GL_CHK;
@@ -104,18 +106,18 @@ int main(void) {
 	}
 
 	while(!glfwWindowShouldClose(window)) {
-		enum af_err result;
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		AF_GL_CHK;
 
-		result = af_drawbuf(&ctx, &vbuf, &vert);
-		AF_CHK(result);
+		AF_CHK(af_draw(&ctx, &drawlist));
 
 		glfwPollEvents();
 		glfwSwapBuffers(window);
 	}
 
+	AF_CHK(af_killdrawlist(&ctx, &drawlist));
 	AF_CHK(af_killbuf(&ctx, &vbuf));
+	AF_CHK(af_killvert(&ctx, &vert));
 	AF_CHK(af_killctx(&ctx));
 }
 

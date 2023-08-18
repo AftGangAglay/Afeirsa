@@ -15,4 +15,10 @@ enum af_err {
 	AF_ERR_MEM
 };
 
+#define AF_CHK(c) \
+	do { \
+		enum af_err err = c; \
+		if(err) return err; \
+	} while(0)
+
 #endif

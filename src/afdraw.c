@@ -14,12 +14,7 @@ enum af_err af_drawbuf(
 	AF_PARAM_CHK(buf);
 	AF_PARAM_CHK(vert);
 
-	/*
-	 * TODO: Should we be checking ctx.feature or buf here?
-	 * 		 The end result is the same but I'm not sure what the clearer/
-	 * 		 More consistent option is.
-	 */
-	if(buf->native) {
+	if(ctx->features.buffers) {
 #ifdef GL_VERSION_2_0
 		/* TODO: Native buffer draw */
 		return AF_ERR_NONE;
@@ -79,7 +74,120 @@ enum af_err af_mkdrawlist(
 	AF_PARAM_CHK(drawlist);
 	AF_PARAM_CHK(ops);
 
-	(void) len;
+	drawlist->len = len;
+	if(!( drawlist->ops = ctx->malloc(len * sizeof(struct af_drawop)) )) {
+		return AF_ERR_MEM;
+	}
+
+	af_memcpy(drawlist->ops, ops, len * sizeof(struct af_drawop));
+
+	if(ctx->features.buffers) {
+#ifdef GL_VERSION_2_0
+		/* TODO: Native buffer drawlists */
+		return AF_ERR_NONE;
+#endif
+	}
+
+	{
+		af_uint_t gl_handle = 0;
+		af_size_t i;
+
+		continue2:;
+		gl_handle++;
+
+		for(i = 0; i < ctx->drawlists_len; ++i) {
+			if(ctx->drawlists[i] == gl_handle) goto continue2;
+		}
+
+		drawlist->gl_handle = gl_handle;
+
+		ctx->drawlists = ctx->realloc(
+								ctx->drawlists,
+								++ctx->drawlists_len * sizeof(af_uint_t));
+		if(!( ctx->drawlists )) return AF_ERR_MEM;
+		ctx->drawlists[ctx->drawlists_len - 1] = gl_handle;
+
+		glNewList(gl_handle, GL_COMPILE);
+		{
+			for(i = 0; i < len; ++i) {
+				switch(ops[i].type) {
+					case AF_DRAWBUF: {
+						struct af_drawop_drawbuf* drawbuf =
+							&ops[i].data.drawbuf;
+						AF_CHK(af_drawbuf(ctx, drawbuf->buf, drawbuf->vert));
+						break;
+					}
+					case AF_RUNDRAW: {
+						AF_CHK(af_draw(ctx, drawlist));
+						break;
+					}
+					case AF_SETMAT: {
+						break;
+					}
+					case AF_SETTEX: {
+						break;
+					}
+				}
+			}
+		}
+		glEndList();
+		AF_GL_CHK;
+	}
+
+	return AF_ERR_NONE;
+}
+
+enum af_err af_killdrawlist(struct af_ctx* ctx, struct af_drawlist* drawlist) {
+
+	af_uint_t* copy;
+	af_size_t i;
+	af_size_t pos = 0;
+
+	AF_CTX_CHK(ctx);
+	AF_PARAM_CHK(drawlist);
+
+	ctx->free(drawlist->ops);
+
+	if(ctx->features.buffers) {
+#ifdef GL_VERSION_2_0
+		/* TODO: Native buffer drawlists */
+		return AF_ERR_NONE;
+#endif
+	}
+
+	copy = ctx->malloc((ctx->drawlists_len - 1) * sizeof(af_uint_t));
+	if(!copy) return AF_ERR_MEM;
+
+	for(i = 0; i < ctx->drawlists_len; ++i) {
+		if(ctx->drawlists[i] == drawlist->gl_handle) continue;
+
+		copy[pos++] = ctx->drawlists[i];
+	}
+
+	ctx->free(ctx->drawlists);
+	ctx->drawlists = copy;
+	ctx->drawlists_len--;
+
+	glDeleteLists(drawlist->gl_handle, 1);
+	AF_GL_CHK;
+
+	return AF_ERR_NONE;
+}
+
+enum af_err af_draw(struct af_ctx* ctx, struct af_drawlist* drawlist) {
+
+	AF_CTX_CHK(ctx);
+	AF_PARAM_CHK(drawlist);
+
+	if(ctx->features.buffers) {
+#ifdef GL_VERSION_2_0
+		/* TODO: Native buffer drawlists */
+		return AF_ERR_NONE;
+#endif
+	}
+
+	glCallList(drawlist->gl_handle);
+	AF_GL_CHK;
 
 	return AF_ERR_NONE;
 }

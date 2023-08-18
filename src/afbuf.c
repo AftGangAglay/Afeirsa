@@ -58,7 +58,7 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(buf);
 
-	if(buf->native) {
+	if(ctx->features.buffers) {
 #ifdef GL_VERSION_2_0
 		/* TODO: Native buffer cleanup */
 		return AF_ERR_NONE;
@@ -79,7 +79,7 @@ enum af_err af_upload(
 
 	buf->size = size;
 
-	if(buf->native) {
+	if(ctx->features.buffers) {
 #ifdef GL_VERSION_2_0
 		/* TODO: Native buffer upload */
 		return AF_ERR_NONE;

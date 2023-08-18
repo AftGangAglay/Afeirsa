@@ -42,6 +42,9 @@ struct af_ctx {
 	af_size_t extensions_len;
 	char** extensions;
 
+	af_size_t drawlists_len;
+	af_uint_t* drawlists;
+
 	struct af_features features;
 };
 

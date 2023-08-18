@@ -71,6 +71,11 @@ enum af_err af_mkctx(
 		}
 	}
 
+	if(!ctx->features.buffers) {
+		ctx->drawlists = 0;
+		ctx->drawlists_len = 0;
+	}
+
 	return AF_ERR_NONE;
 }
 

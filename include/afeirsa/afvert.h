@@ -23,13 +23,17 @@ struct af_vert_element {
 };
 
 struct af_vert {
-	const struct af_vert_element* elements;
+	struct af_vert_element* elements;
 	af_size_t len;
 	af_size_t stride;
+
+	af_uint_t gl_handle;
 };
 
 enum af_err af_mkvert(
 		struct af_ctx* ctx, struct af_vert* vert,
 		const struct af_vert_element* elements, af_size_t len);
+
+enum af_err af_killvert(struct af_ctx* ctx, struct af_vert* vert);
 
 #endif

@@ -58,4 +58,13 @@ enum af_err af_mkdrawlist(
 		struct af_ctx* ctx, struct af_drawlist* drawlist,
 		struct af_drawop* ops, af_size_t len);
 
+/*
+ * NOTE: Does not kill associated data from passed operations. User is
+ * 		 Responsible for killing the drawlist operation data passed to
+ * 		 `af_mkdrawlist'.
+ */
+enum af_err af_killdrawlist(struct af_ctx* ctx, struct af_drawlist* drawlist);
+
+enum af_err af_draw(struct af_ctx* ctx, struct af_drawlist* drawlist);
+
 #endif
