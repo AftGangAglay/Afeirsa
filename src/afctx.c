@@ -12,17 +12,13 @@
 #endif
 
 static enum af_err af_set_gl_hints(enum af_fidelity fidelity);
+static enum af_err af_populate_features(struct af_ctx* ctx);
 
-enum af_err af_mkctx(
-		struct af_ctx* ctx, const struct af_gl_ver* gl_ver,
-		enum af_fidelity fidelity) {
+enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 
 	const char* extensions;
 
 	AF_PARAM_CHK(ctx);
-	AF_PARAM_CHK(gl_ver);
-
-	ctx->gl_ver = *gl_ver;
 
 	af_memset(&ctx->features, 0, sizeof(struct af_features));
 
@@ -52,25 +48,33 @@ enum af_err af_mkctx(
 		for(i = 0; extensions[i]; ++i) {
 			++n;
 			if(extensions[i] == ' ') {
-				char* extp;
+				char* ptr;
 
 				ctx->extensions = ctx->realloc(
 					ctx->extensions,
 					++ctx->extensions_len * sizeof(const char*));
 				if(!ctx->extensions) return AF_ERR_MEM;
 
-				extp =
+				ptr =
 					(ctx->extensions[ctx->extensions_len - 1]
 						= ctx->malloc(n));
-				if(!extp) return AF_ERR_MEM;
+				if(!ptr) return AF_ERR_MEM;
 
-				af_memcpy(extp, &extensions[i] - (n - 1), n - 1);
-				extp[n - 1] = 0;
+				af_memcpy(ptr, &extensions[i] - (n - 1), n - 1);
+				ptr[n - 1] = 0;
 
 				n = 0;
 			}
 		}
 	}
+
+	{
+		const char* ver = (const char*) glGetString(GL_VERSION);
+		ctx->gl_ver.major = ver[0] - '0';
+		ctx->gl_ver.major = ver[0] - '0';
+	}
+
+	AF_CHK(af_populate_features(ctx));
 
 	if(!ctx->features.buffers) {
 		ctx->drawlists = 0;
@@ -99,6 +103,7 @@ static enum af_err af_set_gl_hints(enum af_fidelity fidelity) {
 	af_uint_t mode;
 	af_size_t i;
 
+	/* TODO: Extension hints. Is there an "enumerate hints" glGet? */
 	const af_uint_t gl_hints[] = {
 #ifdef GL_FOG_HINT
 		GL_FOG_HINT,
@@ -153,4 +158,40 @@ static enum af_err af_set_gl_hints(enum af_fidelity fidelity) {
 	}
 
 	return AF_ERR_NONE;
+}
+
+static enum af_err af_populate_features(struct af_ctx* ctx) {
+	AF_CTX_CHK(ctx);
+
+#if defined(GL_VERSION_1_1) && !defined(GL10_COMPAT)
+	if(ctx->gl_ver.minor > 0) ctx->features.multitexture = AF_CORE;
+#else
+# if defined(GL_ARB_multitexture) && !defined(NO_EXT)
+	if(af_haveext(ctx, "GL_ARB_multitexture")) {
+		ctx->features.multitexture = AF_ARB;
+	}
+# endif
+#endif
+
+#if defined(GL_VERSION_2_0) && !defined(GL10_COMPAT)
+	if(ctx->gl_ver.major > 1) ctx->features.buffers = AF_CORE;
+#else
+# if defined(GL_ARB_vertex_buffer_object) && !defined(NO_EXT)
+	if(af_haveext(ctx, "GL_ARB_vertex_buffer_object")) {
+		ctx->features.buffers = AF_ARB;
+	}
+# endif
+#endif
+
+	return AF_ERR_NONE;
+}
+
+af_bool_t af_haveext(struct af_ctx* ctx, const char* ext) {
+	af_size_t i;
+
+	for(i = 0; i < ctx->extensions_len; ++i) {
+		if(af_streql(ctx->extensions[i], ext)) return AF_TRUE;
+	}
+
+	return AF_FALSE;
 }

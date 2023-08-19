@@ -9,6 +9,12 @@ CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
 ifdef USE_STDLIB
 CFLAGS += -DUSE_STDLIB
 endif
+ifdef GL10_COMPAT
+CFLAGS += -DGL10_COMPAT
+endif
+ifdef NO_EXT
+CFLAGS += -DNO_EXT
+endif
 ifdef DEBUG
 CFLAGS += -g -O0 -D_DEBUG
 else

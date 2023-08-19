@@ -24,9 +24,16 @@ typedef void (*af_free_t)(void*);
 typedef void* (*af_malloc_t)(af_size_t);
 typedef void* (*af_realloc_t)(void*, af_size_t);
 
+enum af_feature_level {
+	AF_NOT_PRESENT,
+	AF_CORE,
+	AF_EXT,
+	AF_ARB
+};
+
 struct af_features {
-	af_bool_t buffers; /* TODO: Criteria for this? */
-	af_bool_t multitexture;
+	enum af_feature_level buffers;
+	enum af_feature_level multitexture;
 };
 
 struct af_ctx {
@@ -49,10 +56,10 @@ struct af_ctx {
 	struct af_features features;
 };
 
-enum af_err af_mkctx(
-		struct af_ctx* ctx, const struct af_gl_ver* gl_ver,
-		enum af_fidelity fidelity);
+enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity);
 enum af_err af_killctx(struct af_ctx* ctx);
+
+af_bool_t af_haveext(struct af_ctx* ctx, const char* ext);
 
 enum af_err af_setview(struct af_ctx* ctx, af_uint_t w, af_uint_t h);
 

@@ -46,30 +46,30 @@ enum af_err af_drawbuf(
 			af_size_t off = 0;
 			for(j = 0; j < vert->len; ++j) {
 				const struct af_vert_element* element = &vert->elements[j];
-				void (*vproc)(const float*) = 0;
+				void (*proc)(const float*) = 0;
 
 				af_size_t stride;
 				switch(element->type) {
 					default: break;
 					case AF_VERT_COL: {
-						vproc = glColor4fv;
+						proc = glColor4fv;
 						stride = 4;
 						break;
 					}
 					case AF_VERT_POS: {
-						vproc = glVertex4fv;
+						proc = glVertex4fv;
 						stride = 4;
 						break;
 					}
 					case AF_VERT_UV: {
-						vproc = glTexCoord4fv;
+						proc = glTexCoord4fv;
 						stride = 4;
 						break;
 					}
 				}
 
-				if(vproc) {
-					vproc(vertex + off);
+				if(proc) {
+					proc(vertex + off);
 					off += stride;
 				}
 			}
@@ -158,8 +158,8 @@ enum af_err af_mkdrawlist(
 						struct af_drawop_drawbuf* drawbuf =
 							&ops[i].data.drawbuf;
 						AF_CHK(af_drawbuf(
-								ctx, drawbuf->buf, drawbuf->vert,
-								drawbuf->primitive));
+							ctx, drawbuf->buf, drawbuf->vert,
+							drawbuf->primitive));
 						break;
 					}
 					case AF_RUNDRAW: {

@@ -30,12 +30,13 @@
 #endif
 
 #define AF_ARRLEN(arr) (sizeof((arr)) / sizeof((arr)[0]))
-#define AF_MEMBSIZE(t, memb) (sizeof((t*) 0)->memb)
+#define AF_MEMBSIZE(t, member) (sizeof((t*) 0)->member)
 
 void* af_memcpy(void* dst, const void* src, af_size_t n);
 void* af_memset(void* dst, int c, af_size_t n);
 
 af_size_t af_strlen(const char* s);
+af_bool_t af_streql(const char* a, const char* b);
 
 #endif
 

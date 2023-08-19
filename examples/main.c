@@ -22,7 +22,6 @@
 	} while(0)
 
 void on_glfw_error(int error_code, const char* description);
-void on_winsize(GLFWwindow* window, int width, int height);
 GLFWwindow* make_glfw(struct af_gl_ver* gl_ver);
 
 struct vertex {
@@ -32,7 +31,7 @@ struct vertex {
 } __attribute__((packed));
 
 int main(void) {
-	struct af_gl_ver gl_ver = { 1, 0 };
+	struct af_gl_ver req_ver = { 1, 0 };
 
 	struct vertex vertices[] = {
 		{
@@ -64,10 +63,10 @@ int main(void) {
 	};
 
 	struct af_ctx ctx;
-	GLFWwindow* window = make_glfw(&gl_ver);
+	GLFWwindow* window = make_glfw(&req_ver);
 
 	struct af_drawlist drawlist;
-	struct af_buf vbuf;
+	struct af_buf buf;
 	struct af_vert vert;
 	struct af_buf tex;
 
@@ -82,7 +81,7 @@ int main(void) {
 	drawops[0].data.settex.width = 64;
 
 	drawops[1].data.drawbuf.vert = &vert;
-	drawops[1].data.drawbuf.buf = &vbuf;
+	drawops[1].data.drawbuf.buf = &buf;
 	drawops[1].data.drawbuf.primitive = AF_TRIANGLE_FAN;
 
 	srand(time(0));
@@ -91,17 +90,20 @@ int main(void) {
 		texdata[i] = rand();
 	}
 
-	AF_CHK(af_mkctx(&ctx, &gl_ver, AF_FIDELITY_FAST));
+	AF_CHK(af_mkctx(&ctx, AF_FIDELITY_FAST));
+	printf("%u.%u\n", ctx.gl_ver.major, ctx.gl_ver.minor);
 
 	AF_CHK(af_mkvert(&ctx, &vert, vert_elements, AF_ARRLEN(vert_elements)));
 
-	AF_CHK(af_mkbuf(&ctx, &vbuf, AF_BUF_VERTEX));
-	AF_CHK(af_upload(&ctx, &vbuf, vertices, sizeof(vertices)));
+	AF_CHK(af_mkbuf(&ctx, &buf, AF_BUF_VERTEX));
+	AF_CHK(af_upload(&ctx, &buf, vertices, sizeof(vertices)));
 
 	AF_CHK(af_mkbuf(&ctx, &tex, AF_BUF_TEXTURE));
 	AF_CHK(af_upload(&ctx, &tex, texdata, sizeof(texdata)));
 
 	AF_CHK(af_mkdrawlist(&ctx, &drawlist, drawops, AF_ARRLEN(drawops)));
+
+	AF_CHK(af_setview(&ctx, 640, 480));
 
 	glMatrixMode(GL_MODELVIEW);
 	AF_GL_CHK;
@@ -135,7 +137,7 @@ int main(void) {
 	AF_CHK(af_killdrawlist(&ctx, &drawlist));
 	AF_CHK(af_killbuf(&ctx, &tex));
 	AF_CHK(af_killvert(&ctx, &vert));
-	AF_CHK(af_killbuf(&ctx, &vbuf));
+	AF_CHK(af_killbuf(&ctx, &buf));
 	AF_CHK(af_killctx(&ctx));
 }
 

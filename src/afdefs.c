@@ -41,3 +41,16 @@ af_size_t af_strlen(const char* s) {
 	return n;
 #endif
 }
+
+af_bool_t af_streql(const char* a, const char* b) {
+#ifdef USE_STDLIB
+	return !strcmp(a, b);
+#else
+	af_size_t n;
+	while(AF_TRUE) {
+		if(a[n] != b[n]) return AF_FALSE;
+		if(!a[n]) return AF_TRUE;
+		++n;
+	}
+#endif
+}
