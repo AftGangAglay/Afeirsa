@@ -71,7 +71,7 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 	{
 		const char* ver = (const char*) glGetString(GL_VERSION);
 		ctx->gl_ver.major = ver[0] - '0';
-		ctx->gl_ver.major = ver[0] - '0';
+		ctx->gl_ver.minor = ver[2] - '0';
 	}
 
 	AF_CHK(af_populate_features(ctx));
