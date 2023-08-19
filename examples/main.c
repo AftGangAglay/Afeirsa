@@ -23,7 +23,7 @@
 
 void on_glfw_error(int error_code, const char* description);
 void on_winsize(GLFWwindow* window, int width, int height);
-GLFWwindow* make_glfw(struct af_gl_ver* gl_ver, struct af_ctx* ctx);
+GLFWwindow* make_glfw(struct af_gl_ver* gl_ver);
 
 struct vertex {
 	float pos[4];
@@ -64,7 +64,7 @@ int main(void) {
 	};
 
 	struct af_ctx ctx;
-	GLFWwindow* window = make_glfw(&gl_ver, &ctx);
+	GLFWwindow* window = make_glfw(&gl_ver);
 
 	struct af_drawlist drawlist;
 	struct af_buf vbuf;
@@ -104,16 +104,24 @@ int main(void) {
 	AF_CHK(af_mkdrawlist(&ctx, &drawlist, drawops, AF_ARRLEN(drawops)));
 
 	glMatrixMode(GL_MODELVIEW);
+	AF_GL_CHK;
 		glLoadIdentity();
+		AF_GL_CHK;
 		glTranslatef(0.0f, 0.0f, -2.0f);
+		AF_GL_CHK;
 
 	glMatrixMode(GL_PROJECTION);
+	AF_GL_CHK;
 		glLoadIdentity();
+		AF_GL_CHK;
 		gluPerspective(60.0f, 3.0 / 2.0, 0.01, 100.0);
+		AF_GL_CHK;
 
 	while(!glfwWindowShouldClose(window)) {
 		glMatrixMode(GL_PROJECTION);
+		AF_GL_CHK;
 			glRotatef(0.1f, 0.0f, 1.0f, 0.0f);
+			AF_GL_CHK;
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		AF_GL_CHK;
@@ -135,32 +143,19 @@ void on_glfw_error(int error_code, const char* description) {
 	fprintf(stderr, "glfw error %i: %s\n", error_code, description);
 }
 
-GLFWwindow* make_glfw(struct af_gl_ver* ver, struct af_ctx* ctx) {
+GLFWwindow* make_glfw(struct af_gl_ver* ver) {
 	GLFWwindow* window;
 
 	glfwSetErrorCallback(on_glfw_error);
 	glfwInit();
 
-	/*
-	glfwWindowHint(GLFW_CONTEXT_ROBUSTNESS, GLFW_LOSE_CONTEXT_ON_RESET);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-	*/
-
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, ver->major);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, ver->minor);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, (int) ver->major);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, (int) ver->minor);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	window = glfwCreateWindow(640, 480, "Afeirsa Test", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
-	glfwSetWindowSizeCallback(window, on_winsize);
-	glfwSetWindowUserPointer(window, ctx);
-
 	return window;
-}
-
-void on_winsize(GLFWwindow* window, int width, int height) {
-	AF_CHK(af_setview(glfwGetWindowUserPointer(window), width, height));
 }
