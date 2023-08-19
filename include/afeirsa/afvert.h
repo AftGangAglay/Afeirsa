@@ -14,7 +14,8 @@ enum af_vert_element_type {
 	AF_VERT_NONE,
 	AF_VERT_POS,
 	AF_VERT_COL,
-	AF_VERT_UV
+	AF_VERT_UV,
+	AF_VERT_NORM
 };
 
 struct af_vert_element {

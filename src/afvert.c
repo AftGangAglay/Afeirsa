@@ -11,7 +11,6 @@ enum af_err af_mkvert(
 		const struct af_vert_element* elements, af_size_t len) {
 
 	af_size_t i;
-	af_size_t req;
 
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(vert);
@@ -19,30 +18,7 @@ enum af_err af_mkvert(
 
 	vert->stride = 0;
 
-	for(i = 0; i < len; ++i) {
-		switch(elements[i].type) {
-			default: {
-				req = 0;
-				break;
-			}
-			case AF_VERT_COL: {
-				req = 4;
-				break;
-			}
-			case AF_VERT_POS: {
-				req = 4;
-				break;
-			}
-			case AF_VERT_UV: {
-				req = 4;
-				break;
-			}
-		}
-
-		AF_VERIFY(elements[i].size == sizeof(float) * req, AF_ERR_BAD_PARAM);
-
-		vert->stride += elements[i].size;
-	}
+	for(i = 0; i < len; ++i) vert->stride += elements[i].size;
 
 	vert->elements = ctx->malloc(len * sizeof(struct af_vert_element));
 	if(!vert->elements) return AF_ERR_MEM;

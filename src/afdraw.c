@@ -46,31 +46,57 @@ enum af_err af_drawbuf(
 			af_size_t off = 0;
 			for(j = 0; j < vert->len; ++j) {
 				const struct af_vert_element* element = &vert->elements[j];
-				void (*proc)(const float*) = 0;
+				const af_size_t count = element->size / sizeof(float);
+				typedef void (*af_attrib_proc_t)(const float*);
+				const af_attrib_proc_t* procs = 0;
+				af_size_t min;
+				af_size_t max;
 
-				af_size_t stride;
 				switch(element->type) {
 					default: break;
 					case AF_VERT_COL: {
-						proc = glColor4fv;
-						stride = 4;
+						const static af_attrib_proc_t col_procs[] = {
+							glColor3fv, glColor4fv
+						};
+						procs = col_procs;
+						min = 3;
+						max = 4;
 						break;
 					}
 					case AF_VERT_POS: {
-						proc = glVertex4fv;
-						stride = 4;
+						const static af_attrib_proc_t pos_procs[] = {
+							glVertex2fv, glVertex3fv, glVertex4fv
+						};
+						procs = pos_procs;
+						min = 2;
+						max = 4;
 						break;
 					}
 					case AF_VERT_UV: {
-						proc = glTexCoord4fv;
-						stride = 4;
+						const static af_attrib_proc_t uv_procs[] = {
+							glTexCoord1fv, glTexCoord2fv, glTexCoord3fv,
+							glTexCoord4fv
+						};
+						procs = uv_procs;
+						min = 1;
+						max = 4;
+						break;
+					}
+					case AF_VERT_NORM: {
+						const static af_attrib_proc_t norm_procs[] = {
+							glNormal3fv
+						};
+						procs = norm_procs;
+						min = 3;
+						max = 3;
 						break;
 					}
 				}
 
-				if(proc) {
-					proc(vertex + off);
-					off += stride;
+				if(procs) {
+					if(count < min || count > max) return AF_ERR_BAD_OP;
+					procs[count - min](vertex + off);
+					off += count;
 				}
 			}
 		}

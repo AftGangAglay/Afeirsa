@@ -25,9 +25,10 @@ void on_glfw_error(int error_code, const char* description);
 GLFWwindow* make_glfw(struct af_gl_ver* gl_ver);
 
 struct vertex {
-	float pos[4];
-	/* float col[4]; */
-	float uv[4];
+	float pos[3];
+	float col[4];
+	float uv[2];
+	float norm[3];
 } __attribute__((packed));
 
 int main(void) {
@@ -35,31 +36,36 @@ int main(void) {
 
 	struct vertex vertices[] = {
 		{
-			{ -1.0f,  1.0f, 0.0f, 1.0f },
-			/* {  1.0f,  0.0f, 0.0f, 1.0f }, */
-			{  0.0f,  1.0f, 0.0f, 1.0f }
+			{ -1.0f,  1.0f, 0.0f },
+			{  1.0f,  0.0f, 0.0f, 0.7f },
+			{  0.0f,  1.0f },
+			{  0.0f,  1.0f, 0.0f }
 		},
 		{
-			{  1.0f,  1.0f, 0.0f, 1.0f },
-			/* {  0.0f,  1.0f, 0.0f, 1.0f }, */
-			{  1.0f,  1.0f, 0.0f, 1.0f }
+			{  1.0f,  1.0f, 0.0f },
+			{  0.0f,  1.0f, 0.0f, 0.7f },
+			{  1.0f,  1.0f },
+			{  0.0f,  1.0f, 0.0f }
 		},
 		{
-			{  1.0f, -1.0f, 0.0f, 1.0f },
-			/* {  0.0f,  1.0f, 0.0f, 1.0f }, */
-			{  1.0f,  0.0f, 0.0f, 1.0f }
+			{  1.0f, -1.0f, 0.0f },
+			{  1.0f,  1.0f, 0.0f, 0.7f },
+			{  1.0f,  0.0f },
+			{  0.0f,  1.0f, 0.0f }
 		},
 		{
-			{ -1.0f, -1.0f, 0.0f, 1.0f },
-			/* {  0.0f,  0.0f, 1.0f, 1.0f }, */
-			{  0.0f,  0.0f, 0.0f, 1.0f }
+			{ -1.0f, -1.0f, 0.0f },
+			{  0.0f,  0.0f, 1.0f, 0.7f },
+			{  0.0f,  0.0f },
+			{  0.0f,  1.0f, 0.0f }
 		}
 	};
 
 	struct af_vert_element vert_elements[] = {
-		{ AF_MEMBSIZE(struct vertex, pos), AF_VERT_POS },
-		/* { AF_MEMBSIZE(struct vertex, col), AF_VERT_COL }, */
-		{ AF_MEMBSIZE(struct vertex, uv ), AF_VERT_UV  },
+		{ AF_MEMBSIZE(struct vertex, pos ), AF_VERT_POS  },
+		{ AF_MEMBSIZE(struct vertex, col ), AF_VERT_COL  },
+		{ AF_MEMBSIZE(struct vertex, uv  ), AF_VERT_UV   },
+		{ AF_MEMBSIZE(struct vertex, norm), AF_VERT_NORM },
 	};
 
 	struct af_ctx ctx;
@@ -105,13 +111,6 @@ int main(void) {
 
 	AF_CHK(af_setview(&ctx, 640, 480));
 
-	glMatrixMode(GL_MODELVIEW);
-	AF_GL_CHK;
-		glLoadIdentity();
-		AF_GL_CHK;
-		glTranslatef(0.0f, 0.0f, -2.0f);
-		AF_GL_CHK;
-
 	glMatrixMode(GL_PROJECTION);
 	AF_GL_CHK;
 		glLoadIdentity();
@@ -119,14 +118,43 @@ int main(void) {
 		gluPerspective(60.0f, 3.0 / 2.0, 0.01, 100.0);
 		AF_GL_CHK;
 
+	/*
+	glEnable(GL_LIGHTING);
+	AF_GL_CHK;
+	{
+		float pos[] = { 0.0f, -1.0f, 0.0f, 1.0f };
+		glLightfv(GL_LIGHT0, GL_POSITION, pos);
+		glEnable(GL_LIGHT0);
+	}
+	*/
+
 	while(!glfwWindowShouldClose(window)) {
+		float y_rot = 0.0f;
+		float z_trans = 0.0f;
+		if(glfwGetKey(window, GLFW_KEY_D)) y_rot =  0.5f;
+		if(glfwGetKey(window, GLFW_KEY_A)) y_rot = -0.5f;
+		if(glfwGetKey(window, GLFW_KEY_W)) z_trans =  0.5f;
+		if(glfwGetKey(window, GLFW_KEY_S)) z_trans = -0.5f;
 		glMatrixMode(GL_PROJECTION);
 		AF_GL_CHK;
-			glRotatef(0.1f, 0.0f, 1.0f, 0.0f);
+			glRotatef(y_rot, 0.0f, 1.0f, 0.0f);
+			AF_GL_CHK;
+			glTranslatef(0.0f, 0.0f, z_trans);
 			AF_GL_CHK;
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		AF_GL_CHK;
+
+		glMatrixMode(GL_MODELVIEW);
+		AF_GL_CHK;
+			glLoadIdentity();
+			AF_GL_CHK;
+			glScalef(15.0f, 1.0f, 15.0f);
+			AF_GL_CHK;
+			glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+			AF_GL_CHK;
+			glTranslatef(0.0f, 0.0f, 2.0f);
+			AF_GL_CHK;
 
 		AF_CHK(af_draw(&ctx, &drawlist));
 
