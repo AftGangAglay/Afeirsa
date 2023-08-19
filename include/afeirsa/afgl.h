@@ -17,6 +17,10 @@
 */
 # include <OpenGL/glu.h>
 # undef GL_SILENCE_DEPRECATION
+#else
+# include <GL/gl.h>
+# include <GL/glext.h>
+# include <GL/glu.h>
 #endif
 
 #include <afeirsa/aferr.h>
