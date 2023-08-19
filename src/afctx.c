@@ -17,7 +17,6 @@ enum af_err af_mkctx(
 		struct af_ctx* ctx, const struct af_gl_ver* gl_ver,
 		enum af_fidelity fidelity) {
 
-	enum af_err err;
 	const char* extensions;
 
 	AF_PARAM_CHK(ctx);
@@ -27,8 +26,10 @@ enum af_err af_mkctx(
 
 	af_memset(&ctx->features, 0, sizeof(struct af_features));
 
-	err = af_set_gl_hints(fidelity);
-	if(err) return err;
+	AF_CHK(af_set_gl_hints(fidelity));
+
+	glEnable(GL_TEXTURE_2D);
+	AF_GL_CHK;
 
 #ifdef USE_STDLIB
 	ctx->malloc = malloc;

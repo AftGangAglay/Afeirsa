@@ -55,7 +55,10 @@ struct af_drawop {
 			struct af_vert* vert;
 			enum af_primitive primitive;
 		} drawbuf;
-		struct af_buf* settex;
+		struct af_drawop_settex {
+			struct af_buf* tex;
+			af_size_t width;
+		} settex;
 		/* TODO: Mat */
 		struct af_drawlist* rundraw;
 	} data;
@@ -71,6 +74,9 @@ struct af_drawlist {
 enum af_err af_drawbuf(
 		struct af_ctx* ctx, struct af_buf* buf, struct af_vert* vert,
 		enum af_primitive primitive);
+
+enum af_err af_settex(
+		struct af_ctx* ctx, struct af_buf* tex, af_size_t width);
 
 enum af_err af_mkdrawlist(
 		struct af_ctx* ctx, struct af_drawlist* drawlist,

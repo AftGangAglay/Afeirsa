@@ -26,6 +26,7 @@ typedef void* (*af_realloc_t)(void*, af_size_t);
 
 struct af_features {
 	af_bool_t buffers; /* TODO: Criteria for this? */
+	af_bool_t multitexture;
 };
 
 struct af_ctx {

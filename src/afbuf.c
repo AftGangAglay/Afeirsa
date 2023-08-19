@@ -37,6 +37,11 @@ enum af_err af_mkbuf(
 	 * Nice and consistent between buffers and textures, so it's nice.
 	 */
 	if(type == AF_BUF_TEXTURE) {
+#ifdef GL_VERSION_1_1
+		if(ctx->features.multitexture) {
+			/* TODO: Textures w/ explicit binding points */
+		}
+#endif
 		return AF_ERR_NONE;
 	}
 
@@ -58,6 +63,16 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(buf);
 
+	if(buf->type == AF_BUF_TEXTURE) {
+		if(ctx->features.multitexture) {
+#ifdef GL_VERSION_1_1
+			/* TODO: Textures w/ explicit binding points */
+			return AF_ERR_NONE;
+#endif
+		}
+		return AF_ERR_NONE;
+	}
+
 	if(ctx->features.buffers) {
 #ifdef GL_VERSION_2_0
 		/* TODO: Native buffer cleanup */
@@ -78,6 +93,15 @@ enum af_err af_upload(
 	AF_PARAM_CHK(buf);
 
 	buf->size = size;
+
+	if(buf->type == AF_BUF_TEXTURE) {
+		if(ctx->features.multitexture) {
+#ifdef GL_VERSION_1_1
+			/* TODO: Textures w/ explicit binding points */
+			return AF_ERR_NONE;
+#endif
+		}
+	}
 
 	if(ctx->features.buffers) {
 #ifdef GL_VERSION_2_0

@@ -69,13 +69,27 @@ int main(void) {
 	struct af_drawlist drawlist;
 	struct af_buf vbuf;
 	struct af_vert vert;
+	struct af_buf tex;
 
-	struct af_drawop drawop = { AF_DRAWBUF, { 0 } };
-	drawop.data.drawbuf.vert = &vert;
-	drawop.data.drawbuf.buf = &vbuf;
-	drawop.data.drawbuf.primitive = AF_TRIANGLE_FAN;
+	af_uchar_t texdata[64 * 64 * 4];
+	af_size_t i;
+
+	struct af_drawop drawops[] = {
+		{ AF_SETTEX, { 0 } },
+		{ AF_DRAWBUF, { 0 } }
+	};
+	drawops[0].data.settex.tex = &tex;
+	drawops[0].data.settex.width = 64;
+
+	drawops[1].data.drawbuf.vert = &vert;
+	drawops[1].data.drawbuf.buf = &vbuf;
+	drawops[1].data.drawbuf.primitive = AF_TRIANGLE_FAN;
 
 	srand(time(0));
+
+	for(i = 0; i < AF_ARRLEN(texdata); ++i) {
+		texdata[i] = rand();
+	}
 
 	AF_CHK(af_mkctx(&ctx, &gl_ver, AF_FIDELITY_FAST));
 
@@ -84,34 +98,23 @@ int main(void) {
 	AF_CHK(af_mkbuf(&ctx, &vbuf, AF_BUF_VERTEX));
 	AF_CHK(af_upload(&ctx, &vbuf, vertices, sizeof(vertices)));
 
-	AF_CHK(af_mkdrawlist(&ctx, &drawlist, &drawop, 1));
+	AF_CHK(af_mkbuf(&ctx, &tex, AF_BUF_TEXTURE));
+	AF_CHK(af_upload(&ctx, &tex, texdata, sizeof(texdata)));
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	AF_GL_CHK;
+	AF_CHK(af_mkdrawlist(&ctx, &drawlist, drawops, AF_ARRLEN(drawops)));
 
-	{
-		af_uchar_t tex[64 * 64 * 4];
-		af_size_t i;
-		for(i = 0; i < AF_ARRLEN(tex); ++i) {
-			tex[i] = rand();
-		}
+	glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glTranslatef(0.0f, 0.0f, -2.0f);
 
-		glEnable(GL_DEPTH_TEST);
-		AF_GL_CHK;
-
-		glEnable(GL_TEXTURE_2D);
-		AF_GL_CHK;
-
-		glTexImage2D(
-			GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0,
-			GL_RGBA, GL_UNSIGNED_BYTE, tex);
-		AF_GL_CHK;
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		AF_GL_CHK;
-	}
+	glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(60.0f, 3.0 / 2.0, 0.01, 100.0);
 
 	while(!glfwWindowShouldClose(window)) {
+		glMatrixMode(GL_PROJECTION);
+			glRotatef(0.1f, 0.0f, 1.0f, 0.0f);
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		AF_GL_CHK;
 
@@ -122,8 +125,9 @@ int main(void) {
 	}
 
 	AF_CHK(af_killdrawlist(&ctx, &drawlist));
-	AF_CHK(af_killbuf(&ctx, &vbuf));
+	AF_CHK(af_killbuf(&ctx, &tex));
 	AF_CHK(af_killvert(&ctx, &vert));
+	AF_CHK(af_killbuf(&ctx, &vbuf));
 	AF_CHK(af_killctx(&ctx));
 }
 
