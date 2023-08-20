@@ -14,8 +14,8 @@
 # define AF_CTX_CHK(p)
 # define AF_VERIFY(expr, err)
 #else
-# define AF_PARAM_CHK(ctx) if(!ctx) return AF_ERR_BAD_PARAM
-# define AF_CTX_CHK(p) if(!p) return AF_ERR_BAD_CTX
+# define AF_PARAM_CHK(ctx) if(!(ctx)) return AF_ERR_BAD_PARAM
+# define AF_CTX_CHK(p) if(!(p)) return AF_ERR_BAD_CTX
 # define AF_VERIFY(expr, err) if(!(expr)) return (err)
 #endif
 

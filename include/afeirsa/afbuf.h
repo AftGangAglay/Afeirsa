@@ -23,7 +23,6 @@ struct af_buf {
 	enum af_buf_type type;
 	void* storage;
 	af_size_t size;
-	af_bool_t native;
 };
 
 enum af_err af_mkbuf(
