@@ -14,7 +14,8 @@
 #define WIDTH_I ((int) WIDTH_F)
 #define HEIGHT_I ((int) HEIGHT_F)
 
-GLFWwindow* make_glfw(void);
+GLFWwindow* mkglfw(void);
+void killglfw(GLFWwindow* window);
 
 struct vertex {
 	float pos[3];
@@ -120,7 +121,7 @@ int main(void) {
 	};
 
 	struct af_ctx ctx;
-	GLFWwindow* window = make_glfw();
+	GLFWwindow* window = mkglfw();
 
 	struct af_drawlist drawlist;
 	struct af_buf buf;
@@ -224,9 +225,11 @@ int main(void) {
 	AF_CHK(af_killvert(&ctx, &vert));
 	AF_CHK(af_killbuf(&ctx, &buf));
 	AF_CHK(af_killctx(&ctx));
+
+	killglfw(window);
 }
 
-GLFWwindow* make_glfw(void) {
+GLFWwindow* mkglfw(void) {
 	GLFWwindow* window;
 
 	glfwInit();
@@ -237,4 +240,9 @@ GLFWwindow* make_glfw(void) {
 	glfwMakeContextCurrent(window);
 
 	return window;
+}
+
+void killglfw(GLFWwindow* window) {
+	glfwDestroyWindow(window);
+	glfwTerminate();
 }

@@ -104,6 +104,9 @@ enum af_err af_upload(
 				0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 			AF_GL_CHK;
 
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			AF_GL_CHK;
+
 			return AF_ERR_NONE;
 #endif
 		}

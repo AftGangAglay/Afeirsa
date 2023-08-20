@@ -5,7 +5,6 @@
 
 #include <afeirsa/afdefs.h>
 
-/* TODO: Document this as a build option */
 #ifdef USE_STDLIB
 # include <string.h>
 #endif
