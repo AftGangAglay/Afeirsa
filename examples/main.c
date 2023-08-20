@@ -12,7 +12,12 @@
 #include <stdlib.h>
 #include <time.h>
 
-void on_glfw_error(int error_code, const char* description);
+#define WIDTH_F (640.0f)
+#define HEIGHT_F (480.0f)
+
+#define WIDTH_I ((int) WIDTH_F)
+#define HEIGHT_I ((int) HEIGHT_F)
+
 GLFWwindow* make_glfw(struct af_gl_ver* gl_ver);
 
 struct vertex {
@@ -27,6 +32,8 @@ struct transform {
 	float rot[3];
 	float scale[3];
 };
+
+typedef float pos_t[2];
 
 static int trans(struct transform* trans) {
 	glScalef(trans->scale[0], trans->scale[1], trans->scale[2]);
@@ -88,6 +95,8 @@ int main(void) {
 		}
 	};
 
+	pos_t mouse = { 0 };
+
 	struct af_vert_element vert_elements[] = {
 		{ AF_MEMBSIZE(struct vertex, pos ), AF_VERT_POS  },
 		{ AF_MEMBSIZE(struct vertex, col ), AF_VERT_COL  },
@@ -110,12 +119,19 @@ int main(void) {
 		{ AF_SETTEX, { 0 } },
 		{ AF_DRAWBUF, { 0 } }
 	};
+
+	struct transform cam = { 0 };
+
 	drawops[0].data.settex.tex = &tex;
 	drawops[0].data.settex.width = 64;
 
 	drawops[1].data.drawbuf.vert = &vert;
 	drawops[1].data.drawbuf.buf = &buf;
 	drawops[1].data.drawbuf.primitive = AF_TRIANGLE_FAN;
+
+	cam.scale[0] = 1.0f;
+	cam.scale[1] = 1.0f;
+	cam.scale[2] = 1.0f;
 
 	srand(time(0));
 
@@ -136,30 +152,34 @@ int main(void) {
 
 	AF_CHK(af_mkdrawlist(&ctx, &drawlist, drawops, AF_ARRLEN(drawops)));
 
-	AF_CHK(af_setview(&ctx, 640, 480));
-
-	glMatrixMode(GL_PROJECTION);
-	AF_GL_CHK;
-		glLoadIdentity();
-		AF_GL_CHK;
-		gluPerspective(60.0f, 3.0 / 2.0, 0.01, 100.0);
-		AF_GL_CHK;
+	AF_CHK(af_setview(&ctx, WIDTH_I, HEIGHT_I));
 
 	glEnable(GL_DEPTH_TEST);
 
 	while(!glfwWindowShouldClose(window)) {
-		float y_rot = 0.0f;
-		float z_trans = 0.0f;
-		if(glfwGetKey(window, GLFW_KEY_D)) y_rot =  0.5f;
-		if(glfwGetKey(window, GLFW_KEY_A)) y_rot = -0.5f;
-		if(glfwGetKey(window, GLFW_KEY_W)) z_trans =  0.5f;
-		if(glfwGetKey(window, GLFW_KEY_S)) z_trans = -0.5f;
+		pos_t mouse_delta;
+
+		{
+			double x, y;
+			glfwGetCursorPos(window, &x, &y);
+
+			mouse_delta[0] = ((float) x) - mouse[0];
+			mouse_delta[1] = ((float) y) - mouse[1];
+
+			mouse[0] = (float) x;
+			mouse[1] = (float) y;
+		}
+
+		cam.rot[1] += mouse_delta[0];
+		cam.rot[0] += mouse_delta[1];
+
 		glMatrixMode(GL_PROJECTION);
 		AF_GL_CHK;
-			glRotatef(y_rot, 0.0f, 1.0f, 0.0f);
+			glLoadIdentity();
 			AF_GL_CHK;
-			glTranslatef(0.0f, 0.0f, z_trans);
+			gluPerspective(60.0f, WIDTH_F / HEIGHT_F, 0.01, 100.0);
 			AF_GL_CHK;
+			AF_CHK(trans(&cam));
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		AF_GL_CHK;
@@ -193,14 +213,9 @@ int main(void) {
 	AF_CHK(af_killctx(&ctx));
 }
 
-void on_glfw_error(int error_code, const char* description) {
-	fprintf(stderr, "glfw error %i: %s\n", error_code, description);
-}
-
 GLFWwindow* make_glfw(struct af_gl_ver* ver) {
 	GLFWwindow* window;
 
-	glfwSetErrorCallback(on_glfw_error);
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
@@ -208,7 +223,7 @@ GLFWwindow* make_glfw(struct af_gl_ver* ver) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, (int) ver->minor);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	window = glfwCreateWindow(640, 480, "Afeirsa Test", NULL, NULL);
+	window = glfwCreateWindow(WIDTH_I, HEIGHT_I, "Afeirsa Test", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
 	return window;
