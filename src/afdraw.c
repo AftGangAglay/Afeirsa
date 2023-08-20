@@ -265,3 +265,16 @@ enum af_err af_draw(struct af_ctx* ctx, struct af_drawlist* drawlist) {
 
 	return AF_ERR_NONE;
 }
+
+enum af_err af_clear(struct af_ctx* ctx, const float* col4f) {
+	AF_CTX_CHK(ctx);
+	AF_PARAM_CHK(col4f);
+
+	glClearColor(col4f[0], col4f[1], col4f[2], col4f[3]);
+	AF_GL_CHK;
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	AF_GL_CHK;
+
+	return AF_ERR_NONE;
+}

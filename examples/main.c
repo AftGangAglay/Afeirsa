@@ -8,17 +8,13 @@
 #include <afeirsa/afgl.h>
 #include <GLFW/glfw3.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
 #define WIDTH_F (640.0f)
 #define HEIGHT_F (480.0f)
 
 #define WIDTH_I ((int) WIDTH_F)
 #define HEIGHT_I ((int) HEIGHT_F)
 
-GLFWwindow* make_glfw(struct af_gl_ver* gl_ver);
+GLFWwindow* make_glfw(void);
 
 struct vertex {
 	float pos[3];
@@ -33,7 +29,28 @@ struct transform {
 	float scale[3];
 };
 
-typedef float pos_t[2];
+static af_uchar_t pattern(void) {
+	static af_uchar_t state = 1;
+	static af_uchar_t count = 0;
+
+	af_uchar_t res = state;
+	{
+		af_uchar_t p = (res & 3);
+		res *= state % (p ? p : 17);
+
+		p += state;
+		{
+			af_uchar_t q = 41;
+			res -= (p % q);
+			res += (p + q);
+		}
+		res += !(count % p) * p;
+	}
+	state += res;
+
+	count++;
+	return res;
+}
 
 static int trans(struct transform* trans) {
 	glScalef(trans->scale[0], trans->scale[1], trans->scale[2]);
@@ -66,8 +83,6 @@ static int draw(
 }
 
 int main(void) {
-	struct af_gl_ver req_ver = { 1, 0 };
-
 	struct vertex vertices[] = {
 		{
 			{ -1.0f,  1.0f, 0.0f },
@@ -95,17 +110,17 @@ int main(void) {
 		}
 	};
 
-	pos_t mouse = { 0 };
+	float mouse[2] = { 0 };
 
 	struct af_vert_element vert_elements[] = {
 		{ AF_MEMBSIZE(struct vertex, pos ), AF_VERT_POS  },
-		{ AF_MEMBSIZE(struct vertex, col ), AF_VERT_COL  },
+		{ AF_MEMBSIZE(struct vertex, col ), AF_VERT_NONE },
 		{ AF_MEMBSIZE(struct vertex, uv  ), AF_VERT_UV   },
 		{ AF_MEMBSIZE(struct vertex, norm), AF_VERT_NORM },
 	};
 
 	struct af_ctx ctx;
-	GLFWwindow* window = make_glfw(&req_ver);
+	GLFWwindow* window = make_glfw();
 
 	struct af_drawlist drawlist;
 	struct af_buf buf;
@@ -122,6 +137,8 @@ int main(void) {
 
 	struct transform cam = { 0 };
 
+	float clear[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
 	drawops[0].data.settex.tex = &tex;
 	drawops[0].data.settex.width = 64;
 
@@ -133,14 +150,11 @@ int main(void) {
 	cam.scale[1] = 1.0f;
 	cam.scale[2] = 1.0f;
 
-	srand(time(0));
-
 	for(i = 0; i < AF_ARRLEN(texdata); ++i) {
-		texdata[i] = rand();
+		texdata[i] = pattern();
 	}
 
 	AF_CHK(af_mkctx(&ctx, AF_FIDELITY_FAST));
-	printf("%u.%u\n", ctx.gl_ver.major, ctx.gl_ver.minor);
 
 	AF_CHK(af_mkvert(&ctx, &vert, vert_elements, AF_ARRLEN(vert_elements)));
 
@@ -154,10 +168,8 @@ int main(void) {
 
 	AF_CHK(af_setview(&ctx, WIDTH_I, HEIGHT_I));
 
-	glEnable(GL_DEPTH_TEST);
-
 	while(!glfwWindowShouldClose(window)) {
-		pos_t mouse_delta;
+		float mouse_delta[2];
 
 		{
 			double x, y;
@@ -181,7 +193,7 @@ int main(void) {
 			AF_GL_CHK;
 			AF_CHK(trans(&cam));
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		AF_CHK(af_clear(&ctx, clear));
 		AF_GL_CHK;
 
 		{
@@ -213,14 +225,14 @@ int main(void) {
 	AF_CHK(af_killctx(&ctx));
 }
 
-GLFWwindow* make_glfw(struct af_gl_ver* ver) {
+GLFWwindow* make_glfw(void) {
 	GLFWwindow* window;
 
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, (int) ver->major);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, (int) ver->minor);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	window = glfwCreateWindow(WIDTH_I, HEIGHT_I, "Afeirsa Test", NULL, NULL);

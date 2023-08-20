@@ -27,6 +27,9 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 	glEnable(GL_TEXTURE_2D);
 	AF_GL_CHK;
 
+	glEnable(GL_DEPTH_TEST);
+	AF_GL_CHK;
+
 #ifdef USE_STDLIB
 	ctx->malloc = malloc;
 	ctx->free = free;
@@ -70,8 +73,8 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 
 	{
 		const char* ver = (const char*) glGetString(GL_VERSION);
-		ctx->gl_ver.major = ver[0] - '0';
-		ctx->gl_ver.minor = ver[2] - '0';
+		ctx->gl_ver[0] = ver[0] - '0';
+		ctx->gl_ver[1] = ver[2] - '0';
 	}
 
 	AF_CHK(af_populate_features(ctx));

@@ -91,4 +91,6 @@ enum af_err af_killdrawlist(struct af_ctx* ctx, struct af_drawlist* drawlist);
 
 enum af_err af_draw(struct af_ctx* ctx, struct af_drawlist* drawlist);
 
+enum af_err af_clear(struct af_ctx* ctx, const float* col4f);
+
 #endif

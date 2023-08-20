@@ -15,11 +15,6 @@ enum af_fidelity {
 	AF_FIDELITY_FAST
 };
 
-struct af_gl_ver {
-	af_uint_t major;
-	af_uint_t minor;
-};
-
 typedef void (*af_free_t)(void*);
 typedef void* (*af_malloc_t)(af_size_t);
 typedef void* (*af_realloc_t)(void*, af_size_t);
@@ -37,7 +32,7 @@ struct af_features {
 };
 
 struct af_ctx {
-	struct af_gl_ver gl_ver;
+	af_uint_t gl_ver[2];
 
 	/*
 	 * NOTE: These need to be set before the initial call to `af_mkctx' if
