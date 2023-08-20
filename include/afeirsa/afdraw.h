@@ -57,7 +57,7 @@ struct af_drawop {
 		} drawbuf;
 		struct af_buf* settex;
 		/* TODO: Mat */
-		struct af_drawlist* rundraw;
+		struct af_drawlist* draw;
 	} data;
 };
 
