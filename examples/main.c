@@ -155,7 +155,6 @@ int main(void) {
 	}
 
 	AF_CHK(af_mkctx(&ctx, AF_FIDELITY_FAST));
-	ctx.features.multitexture = AF_CORE;
 
 	AF_CHK(af_mkvert(&ctx, &vert, vert_elements, AF_ARRLEN(vert_elements)));
 
