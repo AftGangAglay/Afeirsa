@@ -23,7 +23,6 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 	af_memset(&ctx->features, 0, sizeof(struct af_features));
 
 	af_memset(&ctx->drawlists, 0, sizeof(struct af_handleset));
-	af_memset(&ctx->textures, 0, sizeof(struct af_handleset));
 
 	AF_CHK(af_set_gl_hints(fidelity));
 
@@ -175,17 +174,20 @@ static enum af_err af_set_gl_hints(enum af_fidelity fidelity) {
 static enum af_err af_populate_features(struct af_ctx* ctx) {
 	AF_CTX_CHK(ctx);
 
-#if defined(GL_VERSION_1_1) && !defined(GL10_COMPAT)
-	if(ctx->gl_ver.minor > 0) ctx->features.multitexture = AF_CORE;
+#ifdef GL_VERSION_1_1
+	if(ctx->gl_ver[1] > 0) ctx->features.multitexture = AF_CORE;
+/* TODO: Not sure how multitexture extension is intended to be used. */
+/*
 #else
 # if defined(GL_ARB_multitexture) && !defined(NO_EXT)
 	if(af_haveext(ctx, "GL_ARB_multitexture")) {
 		ctx->features.multitexture = AF_ARB;
 	}
 # endif
+*/
 #endif
 
-#if defined(GL_VERSION_2_0) && !defined(GL10_COMPAT)
+#ifdef GL_VERSION_2_0
 	if(ctx->gl_ver.major > 1) ctx->features.buffers = AF_CORE;
 #else
 # if defined(GL_ARB_vertex_buffer_object) && !defined(NO_EXT)

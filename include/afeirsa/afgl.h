@@ -23,6 +23,30 @@
 # include <GL/glu.h>
 #endif
 
+#ifdef GL10_COMPAT
+# undef GL_VERSION_1_1
+# undef GL_VERSION_1_2
+# undef GL_VERSION_1_3
+# undef GL_VERSION_1_4
+# undef GL_VERSION_1_5
+
+# undef GL_VERSION_2_0
+# undef GL_VERSION_2_1
+
+# undef GL_VERSION_3_0
+# undef GL_VERSION_3_1
+# undef GL_VERSION_3_2
+# undef GL_VERSION_3_3
+
+# undef GL_VERSION_4_0
+# undef GL_VERSION_4_1
+# undef GL_VERSION_4_2
+# undef GL_VERSION_4_3
+# undef GL_VERSION_4_4
+# undef GL_VERSION_4_5
+# undef GL_VERSION_4_6
+#endif
+
 #include <afeirsa/aferr.h>
 
 #define AF_GL_CHK \

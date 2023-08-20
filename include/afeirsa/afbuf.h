@@ -22,9 +22,14 @@ struct af_buf {
 	af_uint_t gl_handle;
 	enum af_buf_type type;
 	void* storage;
+	af_size_t tex_width;
 	af_size_t size;
 };
 
+/*
+ * NOTE: When making texture buffers. `tex_width' must be set before an
+ * 		 Upload is performed.
+ */
 enum af_err af_mkbuf(
 		struct af_ctx* ctx, struct af_buf* buf, enum af_buf_type type);
 enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf);

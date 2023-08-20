@@ -38,10 +38,9 @@ enum af_err af_mkbuf(
 	 */
 	if(type == AF_BUF_TEXTURE) {
 #ifdef GL_VERSION_1_1
-		if(ctx->features.multitexture == AF_CORE) {
-			
-		}
-		else if(ctx->features.multitexture == AF_ARB) {
+		if(ctx->features.multitexture) {
+			glGenTextures(1, &buf->gl_handle);
+			AF_GL_CHK;
 		}
 #endif
 		return AF_ERR_NONE;
@@ -49,14 +48,10 @@ enum af_err af_mkbuf(
 
 	if(ctx->features.buffers && gl_type) {
 #ifdef GL_VERSION_2_0
-		buf->native = AF_TRUE;
-
 		/* TODO: Native buffer init */
 		return AF_ERR_NONE;
 #endif
 	}
-
-	buf->native = AF_FALSE;
 
 	return AF_ERR_NONE;
 }
@@ -68,7 +63,8 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 	if(buf->type == AF_BUF_TEXTURE) {
 		if(ctx->features.multitexture) {
 #ifdef GL_VERSION_1_1
-			/* TODO: Textures w/ explicit binding points */
+			glDeleteTextures(1, &buf->gl_handle);
+			AF_GL_CHK;
 			return AF_ERR_NONE;
 #endif
 		}
@@ -99,7 +95,15 @@ enum af_err af_upload(
 	if(buf->type == AF_BUF_TEXTURE) {
 		if(ctx->features.multitexture) {
 #ifdef GL_VERSION_1_1
-			/* TODO: Textures w/ explicit binding points */
+			glBindTexture(GL_TEXTURE_2D, buf->gl_handle);
+			AF_GL_CHK;
+
+			glTexImage2D(
+				GL_TEXTURE_2D, 0, GL_RGBA,
+				(int) buf->tex_width, (int) (buf->size / (4 * buf->tex_width)),
+				0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			AF_GL_CHK;
+
 			return AF_ERR_NONE;
 #endif
 		}

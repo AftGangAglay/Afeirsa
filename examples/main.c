@@ -139,8 +139,7 @@ int main(void) {
 
 	float clear[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-	drawops[0].data.settex.tex = &tex;
-	drawops[0].data.settex.width = 64;
+	drawops[0].data.settex = &tex;
 
 	drawops[1].data.drawbuf.vert = &vert;
 	drawops[1].data.drawbuf.buf = &buf;
@@ -155,6 +154,7 @@ int main(void) {
 	}
 
 	AF_CHK(af_mkctx(&ctx, AF_FIDELITY_FAST));
+	ctx.features.multitexture = AF_CORE;
 
 	AF_CHK(af_mkvert(&ctx, &vert, vert_elements, AF_ARRLEN(vert_elements)));
 
@@ -162,6 +162,7 @@ int main(void) {
 	AF_CHK(af_upload(&ctx, &buf, vertices, sizeof(vertices)));
 
 	AF_CHK(af_mkbuf(&ctx, &tex, AF_BUF_TEXTURE));
+	tex.tex_width = 64;
 	AF_CHK(af_upload(&ctx, &tex, texdata, sizeof(texdata)));
 
 	AF_CHK(af_mkdrawlist(&ctx, &drawlist, drawops, AF_ARRLEN(drawops)));
@@ -230,9 +231,6 @@ GLFWwindow* make_glfw(void) {
 
 	glfwInit();
 
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	window = glfwCreateWindow(WIDTH_I, HEIGHT_I, "Afeirsa Test", NULL, NULL);

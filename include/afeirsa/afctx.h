@@ -51,11 +51,6 @@ struct af_ctx {
 	char** extensions;
 
 	struct af_handleset drawlists;
-	/*
-	 * NOTE: We just accept the tiny overhead here to remove preprocessor
-	 * 		 Clutter for the sakes of a few bytes in GL10 conditions.
-	 */
-	struct af_handleset textures;
 
 	struct af_features features;
 };

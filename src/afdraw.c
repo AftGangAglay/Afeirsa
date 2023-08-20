@@ -108,23 +108,23 @@ enum af_err af_drawbuf(
 	return AF_ERR_NONE;
 }
 
-enum af_err af_settex(
-		struct af_ctx* ctx, struct af_buf* tex, af_size_t width) {
-
+enum af_err af_settex(struct af_ctx* ctx, struct af_buf* tex) {
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(tex);
 	AF_VERIFY(tex->type == AF_BUF_TEXTURE, AF_ERR_BAD_PARAM);
 
 	if(ctx->features.multitexture) {
 #ifdef GL_VERSION_1_1
-		/* TODO: Textures w/ explicit binding points */
+		glBindTexture(GL_TEXTURE_2D, tex->gl_handle);
+		AF_GL_CHK;
+
 		return AF_ERR_NONE;
 #endif
 	}
 
 	glTexImage2D(
 		GL_TEXTURE_2D, 0, GL_RGBA,
-		(int) width, (int) (tex->size / (4 * width)), 0,
+		(int) tex->tex_width, (int) (tex->size / (4 * tex->tex_width)), 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, tex->storage);
 	AF_GL_CHK;
 
@@ -181,9 +181,8 @@ enum af_err af_mkdrawlist(
 						break;
 					}
 					case AF_SETTEX: {
-						struct af_drawop_settex* settex =
-							&ops[i].data.settex;
-						AF_CHK(af_settex(ctx, settex->tex, settex->width));
+						struct af_buf* tex = ops[i].data.settex;
+						AF_CHK(af_settex(ctx, tex));
 						break;
 					}
 				}
