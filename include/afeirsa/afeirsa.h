@@ -13,6 +13,7 @@
 #include <afeirsa/afbuf.h>
 #include <afeirsa/afvert.h>
 #include <afeirsa/afdraw.h>
+#include <afeirsa/afparam.h>
 
 #endif
 

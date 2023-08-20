@@ -29,6 +29,7 @@ enum af_feature_level {
 struct af_features {
 	enum af_feature_level buffers;
 	enum af_feature_level multitexture;
+	enum af_feature_level shaders;
 };
 
 struct af_handleset {

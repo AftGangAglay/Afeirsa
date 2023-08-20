@@ -33,4 +33,19 @@ typedef af_uchar_t af_bool_t;
 #define AF_TRUE (1)
 #define AF_FALSE (0)
 
+enum af_datatype {
+	AF_UCHAR,
+	AF_USHORT,
+	AF_UINT,
+	AF_ULONG,
+
+	AF_SCHAR,
+	AF_SSHORT,
+	AF_SINT,
+	AF_SLONG,
+
+	AF_FLOAT,
+	AF_DOUBLE
+};
+
 #endif

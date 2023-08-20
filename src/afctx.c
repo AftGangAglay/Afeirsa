@@ -197,6 +197,16 @@ static enum af_err af_populate_features(struct af_ctx* ctx) {
 # endif
 #endif
 
+#ifdef GL_VERSION_2_0
+	if(ctx->gl_ver.major > 1) ctx->features.shaders = AF_CORE;
+#else
+# if defined(GL_ARB_shader_objects) && !defined(NO_EXT)
+	if(af_haveext(ctx, "GL_ARB_shader_objects")) {
+		ctx->features.shaders = AF_ARB;
+	}
+# endif
+#endif
+
 	return AF_ERR_NONE;
 }
 

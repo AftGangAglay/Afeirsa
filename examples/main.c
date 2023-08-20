@@ -5,7 +5,7 @@
 
 #include <afeirsa/afeirsa.h>
 
-#include <afeirsa/afgl.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 #define WIDTH_F (640.0f)
@@ -53,36 +53,6 @@ static af_uchar_t pattern(void) {
 	return res;
 }
 
-static int trans(struct transform* trans) {
-	glScalef(trans->scale[0], trans->scale[1], trans->scale[2]);
-	AF_GL_CHK;
-	glTranslatef(trans->pos[0], trans->pos[1], trans->pos[2]);
-	AF_GL_CHK;
-	glRotatef(trans->rot[0], 1.0f, 0.0f, 0.0f);
-	AF_GL_CHK;
-	glRotatef(trans->rot[1], 0.0f, 1.0f, 0.0f);
-	AF_GL_CHK;
-	glRotatef(trans->rot[2], 0.0f, 0.0f, 1.0f);
-	AF_GL_CHK;
-
-	return AF_ERR_NONE;
-}
-
-static int draw(
-		struct af_ctx* ctx, struct af_drawlist* drawlist,
-		struct transform* t) {
-
-	glMatrixMode(GL_MODELVIEW);
-	AF_GL_CHK;
-		glLoadIdentity();
-		AF_GL_CHK;
-		AF_CHK(trans(t));
-
-	AF_CHK(af_draw(ctx, drawlist));
-
-	return AF_ERR_NONE;
-}
-
 int main(void) {
 	struct vertex vertices[] = {
 		{
@@ -119,6 +89,9 @@ int main(void) {
 		{ AF_MEMBSIZE(struct vertex, uv  ), AF_VERT_UV   },
 		{ AF_MEMBSIZE(struct vertex, norm), AF_VERT_NORM },
 	};
+
+	struct af_param modelview = { AF_PARAM_MODELVIEW, AF_FLOAT, 16 };
+	struct af_param projection = { AF_PARAM_PROJECTION, AF_FLOAT, 16 };
 
 	struct af_ctx ctx;
 	GLFWwindow* window = mkglfw();
@@ -186,33 +159,40 @@ int main(void) {
 		cam.rot[1] += mouse_delta[0];
 		cam.rot[0] += mouse_delta[1];
 
-		glMatrixMode(GL_PROJECTION);
-		AF_GL_CHK;
-			glLoadIdentity();
-			AF_GL_CHK;
-			gluPerspective(60.0f, WIDTH_F / HEIGHT_F, 0.01, 100.0);
-			AF_GL_CHK;
-			AF_CHK(trans(&cam));
+		{
+			float proj[] = {
+				1.609476f,     0.0f,  0.0f,  0.0f,
+				     0.0f, 2.414213,  0.0f,  0.0f,
+				     0.0f,     0.0f, -1.0f, -1.0f,
+				     0.0f,     0.0f, -0.2f,  0.0f
+			};
+			AF_CHK(af_setparam(&ctx, "u_projection", &projection, proj));
+		}
 
 		AF_CHK(af_clear(&ctx, clear));
-		AF_GL_CHK;
 
 		{
-			struct transform t = {
-				{  0.0f, -2.0f,  0.0f },
-				{ 90.0f,  0.0f,  0.0f },
-				{ 15.0f,  1.0f, 15.0f }
+			float mv[] = {
+				15.0f,  0.0f,  0.0f, 0.0f,
+				 0.0f,  0.0f, 15.0f, 0.0f,
+				 0.0f, -1.0f,  0.0f, 0.0f,
+				 0.0f, -2.0f,  0.0f, 1.0f
 			};
-			AF_CHK(draw(&ctx, &drawlist, &t));
+
+			AF_CHK(af_setparam(&ctx, "u_model_view", &modelview, mv));
+			AF_CHK(af_draw(&ctx, &drawlist));
 		}
 
 		{
-			struct transform t = {
-				{ -2.0f,  0.0f, -5.0f },
-				{  0.0f,  0.0f,  0.0f },
-				{  2.0f,  2.0f,  2.0f }
+			float mv[] = {
+				 1.0f, 0.0f,  0.0f, 0.0f,
+				 0.0f, 1.0f,  0.0f, 0.0f,
+				 0.0f, 0.0f,  1.0f, 0.0f,
+				-2.0f, 0.0f, -4.0f, 1.0f
 			};
-			AF_CHK(draw(&ctx, &drawlist, &t));
+
+			AF_CHK(af_setparam(&ctx, "u_model_view", &modelview, mv));
+			AF_CHK(af_draw(&ctx, &drawlist));
 		}
 
 		glfwPollEvents();
