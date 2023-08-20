@@ -158,25 +158,10 @@ enum af_err af_mkdrawlist(
 	}
 
 	{
-		af_uint_t gl_handle = 0;
 		af_size_t i;
+		AF_CHK(af_mkhandle(ctx, &ctx->drawlists, &drawlist->gl_handle));
 
-		continue2:;
-		gl_handle++;
-
-		for(i = 0; i < ctx->drawlists_len; ++i) {
-			if(ctx->drawlists[i] == gl_handle) goto continue2;
-		}
-
-		drawlist->gl_handle = gl_handle;
-
-		ctx->drawlists = ctx->realloc(
-								ctx->drawlists,
-								++ctx->drawlists_len * sizeof(af_uint_t));
-		if(!( ctx->drawlists )) return AF_ERR_MEM;
-		ctx->drawlists[ctx->drawlists_len - 1] = gl_handle;
-
-		glNewList(gl_handle, GL_COMPILE);
+		glNewList(drawlist->gl_handle, GL_COMPILE);
 		{
 			for(i = 0; i < len; ++i) {
 				switch(ops[i].type) {
@@ -213,10 +198,6 @@ enum af_err af_mkdrawlist(
 
 enum af_err af_killdrawlist(struct af_ctx* ctx, struct af_drawlist* drawlist) {
 
-	af_uint_t* copy;
-	af_size_t i;
-	af_size_t pos = 0;
-
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(drawlist);
 
@@ -229,18 +210,7 @@ enum af_err af_killdrawlist(struct af_ctx* ctx, struct af_drawlist* drawlist) {
 #endif
 	}
 
-	copy = ctx->malloc((ctx->drawlists_len - 1) * sizeof(af_uint_t));
-	if(!copy) return AF_ERR_MEM;
-
-	for(i = 0; i < ctx->drawlists_len; ++i) {
-		if(ctx->drawlists[i] == drawlist->gl_handle) continue;
-
-		copy[pos++] = ctx->drawlists[i];
-	}
-
-	ctx->free(ctx->drawlists);
-	ctx->drawlists = copy;
-	ctx->drawlists_len--;
+	AF_CHK(af_killhandle(ctx, &ctx->drawlists, drawlist->gl_handle));
 
 	glDeleteLists(drawlist->gl_handle, 1);
 	AF_GL_CHK;

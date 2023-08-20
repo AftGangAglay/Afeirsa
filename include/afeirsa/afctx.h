@@ -31,6 +31,11 @@ struct af_features {
 	enum af_feature_level multitexture;
 };
 
+struct af_handleset {
+	af_uint_t* handles;
+	af_size_t len;
+};
+
 struct af_ctx {
 	af_uint_t gl_ver[2];
 
@@ -45,8 +50,12 @@ struct af_ctx {
 	af_size_t extensions_len;
 	char** extensions;
 
-	af_size_t drawlists_len;
-	af_uint_t* drawlists;
+	struct af_handleset drawlists;
+	/*
+	 * NOTE: We just accept the tiny overhead here to remove preprocessor
+	 * 		 Clutter for the sakes of a few bytes in GL10 conditions.
+	 */
+	struct af_handleset textures;
 
 	struct af_features features;
 };
@@ -57,5 +66,13 @@ enum af_err af_killctx(struct af_ctx* ctx);
 af_bool_t af_haveext(struct af_ctx* ctx, const char* ext);
 
 enum af_err af_setview(struct af_ctx* ctx, af_uint_t w, af_uint_t h);
+
+enum af_err af_mkhandle(
+		struct af_ctx* ctx,
+		struct af_handleset* set, af_uint_t* handle);
+
+enum af_err af_killhandle(
+		struct af_ctx* ctx,
+		struct af_handleset* set, af_uint_t handle);
 
 #endif

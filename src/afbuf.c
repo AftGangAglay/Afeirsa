@@ -38,8 +38,10 @@ enum af_err af_mkbuf(
 	 */
 	if(type == AF_BUF_TEXTURE) {
 #ifdef GL_VERSION_1_1
-		if(ctx->features.multitexture) {
-			/* TODO: Textures w/ explicit binding points */
+		if(ctx->features.multitexture == AF_CORE) {
+			
+		}
+		else if(ctx->features.multitexture == AF_ARB) {
 		}
 #endif
 		return AF_ERR_NONE;

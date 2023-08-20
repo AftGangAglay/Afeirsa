@@ -22,6 +22,9 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 
 	af_memset(&ctx->features, 0, sizeof(struct af_features));
 
+	af_memset(&ctx->drawlists, 0, sizeof(struct af_handleset));
+	af_memset(&ctx->textures, 0, sizeof(struct af_handleset));
+
 	AF_CHK(af_set_gl_hints(fidelity));
 
 	glEnable(GL_TEXTURE_2D);
@@ -78,11 +81,6 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 	}
 
 	AF_CHK(af_populate_features(ctx));
-
-	if(!ctx->features.buffers) {
-		ctx->drawlists = 0;
-		ctx->drawlists_len = 0;
-	}
 
 	return AF_ERR_NONE;
 }
