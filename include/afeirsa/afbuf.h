@@ -11,11 +11,9 @@
 #include <afeirsa/afctx.h>
 
 enum af_buf_type {
-	AF_BUF_NONE,
 	AF_BUF_VERTEX,
 	AF_BUF_INDEX,
-	AF_BUF_TEXTURE,
-	AF_BUF_UNIFORM
+	AF_BUF_TEXTURE
 };
 
 struct af_buf {

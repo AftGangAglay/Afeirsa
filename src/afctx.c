@@ -188,7 +188,7 @@ static enum af_err af_populate_features(struct af_ctx* ctx) {
 #endif
 
 #ifdef GL_VERSION_2_0
-	if(ctx->gl_ver.major > 1) ctx->features.buffers = AF_CORE;
+	if(ctx->gl_ver[0] > 1) ctx->features.buffers = AF_CORE;
 #else
 # if defined(GL_ARB_vertex_buffer_object) && !defined(NO_EXT)
 	if(af_haveext(ctx, "GL_ARB_vertex_buffer_object")) {
@@ -198,7 +198,7 @@ static enum af_err af_populate_features(struct af_ctx* ctx) {
 #endif
 
 #ifdef GL_VERSION_2_0
-	if(ctx->gl_ver.major > 1) ctx->features.shaders = AF_CORE;
+	if(ctx->gl_ver[0] > 1) ctx->features.shaders = AF_CORE;
 #else
 # if defined(GL_ARB_shader_objects) && !defined(NO_EXT)
 	if(af_haveext(ctx, "GL_ARB_shader_objects")) {
