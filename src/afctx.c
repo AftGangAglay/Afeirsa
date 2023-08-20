@@ -98,6 +98,9 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 enum af_err af_killctx(struct af_ctx* ctx) {
 	AF_CTX_CHK(ctx);
 
+	ctx->free(ctx->extensions);
+	ctx->free(ctx->drawlists.handles);
+
 	return AF_ERR_NONE;
 }
 
