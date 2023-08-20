@@ -12,15 +12,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#undef AF_CHK
-#define AF_CHK(c) \
-	do { \
-		if(c) { \
-			fprintf(stderr, "%i\n", c); \
-			abort(); \
-		} \
-	} while(0)
-
 void on_glfw_error(int error_code, const char* description);
 GLFWwindow* make_glfw(struct af_gl_ver* gl_ver);
 
@@ -30,6 +21,42 @@ struct vertex {
 	float uv[2];
 	float norm[3];
 } __attribute__((packed));
+
+struct transform {
+	float pos[3];
+	float rot[3];
+	float scale[3];
+};
+
+static int trans(struct transform* trans) {
+	glScalef(trans->scale[0], trans->scale[1], trans->scale[2]);
+	AF_GL_CHK;
+	glTranslatef(trans->pos[0], trans->pos[1], trans->pos[2]);
+	AF_GL_CHK;
+	glRotatef(trans->rot[0], 1.0f, 0.0f, 0.0f);
+	AF_GL_CHK;
+	glRotatef(trans->rot[1], 0.0f, 1.0f, 0.0f);
+	AF_GL_CHK;
+	glRotatef(trans->rot[2], 0.0f, 0.0f, 1.0f);
+	AF_GL_CHK;
+
+	return AF_ERR_NONE;
+}
+
+static int draw(
+		struct af_ctx* ctx, struct af_drawlist* drawlist,
+		struct transform* t) {
+
+	glMatrixMode(GL_MODELVIEW);
+	AF_GL_CHK;
+		glLoadIdentity();
+		AF_GL_CHK;
+		AF_CHK(trans(t));
+
+	AF_CHK(af_draw(ctx, drawlist));
+
+	return AF_ERR_NONE;
+}
 
 int main(void) {
 	struct af_gl_ver req_ver = { 1, 0 };
@@ -118,15 +145,7 @@ int main(void) {
 		gluPerspective(60.0f, 3.0 / 2.0, 0.01, 100.0);
 		AF_GL_CHK;
 
-	/*
-	glEnable(GL_LIGHTING);
-	AF_GL_CHK;
-	{
-		float pos[] = { 0.0f, -1.0f, 0.0f, 1.0f };
-		glLightfv(GL_LIGHT0, GL_POSITION, pos);
-		glEnable(GL_LIGHT0);
-	}
-	*/
+	glEnable(GL_DEPTH_TEST);
 
 	while(!glfwWindowShouldClose(window)) {
 		float y_rot = 0.0f;
@@ -145,18 +164,23 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		AF_GL_CHK;
 
-		glMatrixMode(GL_MODELVIEW);
-		AF_GL_CHK;
-			glLoadIdentity();
-			AF_GL_CHK;
-			glScalef(15.0f, 1.0f, 15.0f);
-			AF_GL_CHK;
-			glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-			AF_GL_CHK;
-			glTranslatef(0.0f, 0.0f, 2.0f);
-			AF_GL_CHK;
+		{
+			struct transform t = {
+				{  0.0f, -2.0f,  0.0f },
+				{ 90.0f,  0.0f,  0.0f },
+				{ 15.0f,  1.0f, 15.0f }
+			};
+			AF_CHK(draw(&ctx, &drawlist, &t));
+		}
 
-		AF_CHK(af_draw(&ctx, &drawlist));
+		{
+			struct transform t = {
+				{ -2.0f,  0.0f, -5.0f },
+				{  0.0f,  0.0f,  0.0f },
+				{  2.0f,  2.0f,  2.0f }
+			};
+			AF_CHK(draw(&ctx, &drawlist, &t));
+		}
 
 		glfwPollEvents();
 		glfwSwapBuffers(window);
