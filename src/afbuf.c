@@ -9,8 +9,8 @@
 
 static af_uint_t af_gl_buf_type(enum af_buf_type type) {
 	switch(type) {
-		case AF_BUF_VERTEX:  return GL_ARRAY_BUFFER;
-		case AF_BUF_INDEX:   return GL_ELEMENT_ARRAY_BUFFER;
+		case AF_BUF_VERT:  return GL_ARRAY_BUFFER;
+		case AF_BUF_IND:   return GL_ELEMENT_ARRAY_BUFFER;
 #ifdef GL_UNIFORM_BUFFER
 		case AF_BUF_UNIFORM: return GL_UNIFORM_BUFFER;
 #endif
@@ -36,7 +36,7 @@ enum af_err af_mkbuf(
 	 * Textures are obviously separate entities in GL but this makes the API
 	 * Nice and consistent between buffers and textures, so it's nice.
 	 */
-	if(type == AF_BUF_TEXTURE) {
+	if(type == AF_BUF_TEX) {
 #ifdef GL_VERSION_1_1
 		if(ctx->features.multitexture) {
 			glGenTextures(1, &buf->gl_handle);
@@ -60,7 +60,7 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(buf);
 
-	if(buf->type == AF_BUF_TEXTURE) {
+	if(buf->type == AF_BUF_TEX) {
 		if(ctx->features.multitexture) {
 #ifdef GL_VERSION_1_1
 			glDeleteTextures(1, &buf->gl_handle);
@@ -92,7 +92,7 @@ enum af_err af_upload(
 
 	buf->size = size;
 
-	if(buf->type == AF_BUF_TEXTURE) {
+	if(buf->type == AF_BUF_TEX) {
 		if(ctx->features.multitexture) {
 #ifdef GL_VERSION_1_1
 			glBindTexture(GL_TEXTURE_2D, buf->gl_handle);

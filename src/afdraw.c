@@ -30,6 +30,8 @@ enum af_err af_drawbuf(
 	AF_PARAM_CHK(buf);
 	AF_PARAM_CHK(vert);
 
+	AF_VERIFY(buf->type == AF_BUF_VERT, AF_ERR_BAD_PARAM);
+
 	if(ctx->features.buffers) {
 #ifdef GL_VERSION_2_0
 		/* TODO: Native buffer draw */
@@ -111,7 +113,7 @@ enum af_err af_drawbuf(
 enum af_err af_settex(struct af_ctx* ctx, struct af_buf* tex) {
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(tex);
-	AF_VERIFY(tex->type == AF_BUF_TEXTURE, AF_ERR_BAD_PARAM);
+	AF_VERIFY(tex->type == AF_BUF_TEX, AF_ERR_BAD_PARAM);
 
 	if(ctx->features.multitexture) {
 #ifdef GL_VERSION_1_1

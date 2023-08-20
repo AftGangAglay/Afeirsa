@@ -110,10 +110,10 @@ int main(void) {
 
 	AF_CHK(af_mkvert(&ctx, &vert, vert_elements, AF_ARRLEN(vert_elements)));
 
-	AF_CHK(af_mkbuf(&ctx, &buf, AF_BUF_VERTEX));
+	AF_CHK(af_mkbuf(&ctx, &buf, AF_BUF_VERT));
 	AF_CHK(af_upload(&ctx, &buf, vertices, sizeof(vertices)));
 
-	AF_CHK(af_mkbuf(&ctx, &tex, AF_BUF_TEXTURE));
+	AF_CHK(af_mkbuf(&ctx, &tex, AF_BUF_TEX));
 	tex.tex_width = 64;
 	AF_CHK(af_upload(&ctx, &tex, texdata, sizeof(texdata)));
 
