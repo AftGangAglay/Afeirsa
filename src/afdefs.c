@@ -46,7 +46,7 @@ af_bool_t af_streql(const char* a, const char* b) {
 #ifdef USE_STDLIB
 	return !strcmp(a, b);
 #else
-	af_size_t n;
+	af_size_t n = 0;
 	while(AF_TRUE) {
 		if(a[n] != b[n]) return AF_FALSE;
 		if(!a[n]) return AF_TRUE;

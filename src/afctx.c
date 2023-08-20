@@ -37,6 +37,17 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 	ctx->malloc = malloc;
 	ctx->free = free;
 	ctx->realloc = realloc;
+#else
+	/*
+	 * NOTE: This check is not robust as we assume the ctx struct is
+	 * 		 Uninitialized when given to us by the user.
+	 */
+	AF_VERIFY(
+		ctx->malloc &&
+		ctx->free &&
+		ctx->realloc,
+		AF_ERR_BAD_CTX
+	);
 #endif
 
 	extensions = (const char*) glGetString(GL_EXTENSIONS);
