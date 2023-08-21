@@ -1,0 +1,16 @@
+			Building
+
+To build, run `make'. Optionally with the following variables set:
+
+     NO_STDLIB	Disables use of the standard library
+   GL10_COMPAT	Restricts core feature usage to OpenGL 1.0
+        NO_EXT	Disables use of OpenGL extensions
+         DEBUG	Perform a debug build with symbols and no optimizations
+BUILD_EXAMPLES	Build example programs alongside the library
+
+			Installing
+
+To install, run `make install' with the same options as used for building.
+The install prefix can be configured with the `PREFIX' variable (Default is
+`/usr/local'). Root privileges may be required depending on the install
+location.

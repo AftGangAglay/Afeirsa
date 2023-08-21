@@ -6,7 +6,7 @@ OUT = src/libafeirsa.a
 
 CFLAGS += -Iinclude
 CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
-ifdef USE_STDLIB
+ifndef NO_STDLIB
 CFLAGS += -DUSE_STDLIB
 endif
 ifdef GL10_COMPAT

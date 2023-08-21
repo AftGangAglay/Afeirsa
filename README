@@ -1,13 +1,15 @@
 			Afeirsa
 
-A super basic GL abstraction for use in Malei and some other bits and bobs.
+Fixed and Programmable Pipeline OpenGL Graphics Layer.
 
 Afeirsa aims to provide a light abstraction over OpenGL to improve convenience
-of use in applications. It is not a renderer nor does it handle context
-creation or management.
+of use in graphical applications.
+It is not a renderer nor does it handle context creation or management.
 
-The primary manner in which it simplifies development is that, where possible,
-missing features for a particular feature level are implemented in software
-within Afeirsa. This does come with the downside of handles and the like
-carrying more heft for contextual information to avoid large internal
-bookkeeping operations.
+See the file `LICENCE' for licence information.
+See the file `INSTALL' for build and install information.
+
+The base library build process only requires that `GL/gl.h' and other headers
+specified here: https://registry.khronos.org/OpenGL/ABI/ are available.
+Platforms which require an explicit exception to this, have such (using
+`OpenGL/gl.h' etc. on macOS for example).
