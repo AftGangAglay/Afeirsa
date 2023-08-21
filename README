@@ -13,3 +13,8 @@ The base library build process only requires that `GL/gl.h' and other headers
 specified here: https://registry.khronos.org/OpenGL/ABI/ are available.
 Platforms which require an explicit exception to this, have such (using
 `OpenGL/gl.h' etc. on macOS for example).
+
+This file is part of Afeirsa (https://github.com/Th3T3chn0G1t/Afeirsa) which is
+licenced under the GNU Lesser General Public License v3.0 or later.
+
+Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
