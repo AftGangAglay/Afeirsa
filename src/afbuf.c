@@ -11,9 +11,6 @@ static af_uint_t af_gl_buf_type(enum af_buf_type type) {
 	switch(type) {
 		case AF_BUF_VERT:  return GL_ARRAY_BUFFER;
 		case AF_BUF_IND:   return GL_ELEMENT_ARRAY_BUFFER;
-#ifdef GL_UNIFORM_BUFFER
-		case AF_BUF_UNIFORM: return GL_UNIFORM_BUFFER;
-#endif
 		/*
 		 * We use GL_NONE to indicate that no true implementation
 		 * is available and to use our own emulation of the feature.
