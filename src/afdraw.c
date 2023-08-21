@@ -57,7 +57,7 @@ enum af_err af_drawbuf(
 				switch(element->type) {
 					default: break;
 					case AF_VERT_COL: {
-						const static af_attrib_proc_t col_procs[] = {
+						static const af_attrib_proc_t col_procs[] = {
 							glColor3fv, glColor4fv
 						};
 						procs = col_procs;
@@ -66,7 +66,7 @@ enum af_err af_drawbuf(
 						break;
 					}
 					case AF_VERT_POS: {
-						const static af_attrib_proc_t pos_procs[] = {
+						static const af_attrib_proc_t pos_procs[] = {
 							glVertex2fv, glVertex3fv, glVertex4fv
 						};
 						procs = pos_procs;
@@ -75,7 +75,7 @@ enum af_err af_drawbuf(
 						break;
 					}
 					case AF_VERT_UV: {
-						const static af_attrib_proc_t uv_procs[] = {
+						static const af_attrib_proc_t uv_procs[] = {
 							glTexCoord1fv, glTexCoord2fv, glTexCoord3fv,
 							glTexCoord4fv
 						};
@@ -85,7 +85,7 @@ enum af_err af_drawbuf(
 						break;
 					}
 					case AF_VERT_NORM: {
-						const static af_attrib_proc_t norm_procs[] = {
+						static const af_attrib_proc_t norm_procs[] = {
 							glNormal3fv
 						};
 						procs = norm_procs;
