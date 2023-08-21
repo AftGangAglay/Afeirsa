@@ -20,6 +20,8 @@ static af_uint_t af_gl_primitive(enum af_primitive primitive) {
 		case AF_POINTS: return GL_POINTS;
 		case AF_POLYGON: return GL_POLYGON;
 	}
+	/* GCC fails to see this is unreachable (assuming well-behaved enum) */
+	return GL_NONE;
 }
 
 enum af_err af_drawbuf(
