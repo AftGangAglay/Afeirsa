@@ -164,6 +164,8 @@ int main(void) {
 	AF_CHK(af_killctx(&ctx));
 
 	killglfw(window);
+
+	return 0;
 }
 
 GLFWwindow* mkglfw(void) {
