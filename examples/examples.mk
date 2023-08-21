@@ -5,7 +5,7 @@ EXAMPLES_CFLAGS := $(CFLAGS)
 EXAMPLES_CFLAGS += $(shell pkg-config --cflags glfw3)
 
 EXAMPLES_LDFLAGS := $(LDFLAGS)
-EXAMPLES_LDFLAGS += $(AFEIRSA_LIB) $(shell pkg-config --libs glfw3)
+EXAMPLES_LDFLAGS += $(AFEIRSA_LIB) $(shell pkg-config --libs glfw3) -lm
 
 UNAME = $(shell uname -s)
 ifeq ($(UNAME),Darwin)
