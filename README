@@ -8,6 +8,7 @@ It is not a renderer nor does it handle context creation or management.
 
 See the file `LICENCE' for licence information.
 See the file `INSTALL' for build and install information.
+See the file `VERSION' for the current library version.
 
 The base library build process only requires that `GL/gl.h' and other headers
 specified here: https://registry.khronos.org/OpenGL/ABI/ are available.

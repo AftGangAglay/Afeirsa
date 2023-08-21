@@ -7,7 +7,9 @@ OBJECTS = $(SOURCES:.c=.o)
 
 OUT = src/libafeirsa.a
 
-CFLAGS += -Iinclude
+VERSION = $(shell cat VERSION)
+
+CFLAGS += -Iinclude -DVERSION=$(VERSION)
 CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
 ifndef NO_STDLIB
 CFLAGS += -DUSE_STDLIB
@@ -46,6 +48,7 @@ install: $(OUT)
 	install $(wildcard doc/*.3) $(PREFIX)/share/man/man3
 
 	echo "prefix=$(PREFIX)" > /tmp/afeirsa.pc
+	echo "version=$(VERSION)" >> /tmp/afeirsa.pc
 	cat build/afeirsa.pc.in >> /tmp/afeirsa.pc
 	install /tmp/afeirsa.pc $(PREFIX)/lib/pkgconfig/
 
