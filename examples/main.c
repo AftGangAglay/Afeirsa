@@ -91,13 +91,12 @@ int main(void) {
 
 	float clear[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-	struct af_drawop drawops[] = {
-		{ AF_SETTEX, { 0 } },
-		{ AF_DRAWBUF, { 0 } }
-	};
+	struct af_drawop drawops[2];
 
+	drawops[0].type = AF_SETTEX;
 	drawops[0].data.settex = &tex;
 
+	drawops[1].type = AF_DRAWBUF;
 	drawops[1].data.drawbuf.vert = &vert;
 	drawops[1].data.drawbuf.buf = &buf;
 	drawops[1].data.drawbuf.primitive = AF_TRIANGLE_FAN;
