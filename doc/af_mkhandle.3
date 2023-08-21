@@ -1,0 +1,30 @@
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_mkhandle 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_mkhandle\fP \- allocate new GL handle
+
+.SH SYNOPSIS
+enum af_err \fBaf_mkhandle\fP(
+struct af_ctx* \fIctx\fP,
+struct af_handleset* \fIset\fP,
+af_uint_t* \fIhandle\fP
+)
+
+.SH DESCRIPTION
+\fBaf_mkhandle\fP creates a new GL handle in the handle set pointed to by
+\fIset\fP. The resultant handle is written out to the storage pointed to by
+\fIhandle\fP.
+
+\fBaf_mkhandle\fP is largely a library-internal call used for creating
+GL objects for other functions.
+
+Once the handle is no longer in use, it should be destroyed with a call to
+\fBaf_killhandle\fP(3).
+
+.SH SEE ALSO
+\fBaf_killhandle\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

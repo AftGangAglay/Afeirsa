@@ -1,0 +1,19 @@
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_haveext 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_haveext\fP \- check for GL extension availability
+
+.SH SYNOPSIS
+af_bool_t \fBaf_haveext\fP(
+struct af_ctx* \fIctx\fP,
+const char* \fIext\fP
+)
+
+.SH DESCRIPTION
+\fBaf_haveext\fP checks whether the GL extension named \fIext\fP is made
+available by the implementation.
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

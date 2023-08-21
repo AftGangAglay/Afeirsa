@@ -1,0 +1,24 @@
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_setview 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_setview\fP \- set graphics context viewport
+
+.SH SYNOPSIS
+enum af_err \fBaf_setview\fP(
+struct af_ctx* \fIctx\fP,
+af_uint_t \fIw\fP,
+af_uint_t \fIh\fP
+)
+
+.SH DESCRIPTION
+\fBaf_setview\fP sets the extent of the viewport which the graphics context
+renders into. The default value is the initial size of the view area when
+the graphics context \fIctx\fP was initialized.
+
+\fBaf_setview\fP should be called after any change to the view area to avoid
+stale view areas being exposed.
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

@@ -1,0 +1,30 @@
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_upload 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_upload\fP \- upload data to graphics buffer
+
+.SH SYNOPSIS
+enum af_err \fBaf_upload\fP(
+struct af_ctx* \fIctx\fP,
+struct af_buf* \fIbuf\fP,
+const void* \fIdata\fP,
+af_size_t \fIsize\fP
+)
+
+.SH DESCRIPTION
+\fBaf_upload\fP uploads data to the graphics buffer object in the storage
+pointed to by \fIbuf\fP which was previously passed to \fBaf_mkbuf\fP(3).
+\fIdata\fP is a pointer to the host buffer of data of byte-length \fIsize\fP
+to be uploaded. \fIdata\fP is effectively copied during upload and does not
+need to be kept in-scope after a call to \fBaf_upload\fP for the buffer's
+contents to remain valid.
+
+The previous contents of the buffer are overwritten by this operation.
+
+.SH SEE ALSO
+\fBaf_mkbuf\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

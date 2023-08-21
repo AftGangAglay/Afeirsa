@@ -1,0 +1,38 @@
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_mkbuf 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_mkbuf\fP \- create graphics buffer
+
+.SH SYNOPSIS
+enum af_err \fBaf_mkbuf\fP(
+struct af_ctx* \fIctx\fP,
+struct af_buf* \fIbuf\fP,
+enum af_buf_type \fItype\fP
+)
+
+.SH DESCRIPTION
+\fBaf_mkbuf\fP creates a new graphics buffer object in the storage pointed to
+by \fIbuf\fP. The type of the buffer is specified by \fItype\fP.
+The significance of available types is detailed below.
+.TS
+tab(|);
+l l .
+\t\fIAF_BUF_VER\fP|A buffer for storing model vertex data.
+\t\fIAF_BUF_IND\fP|A buffer for storing indices into vertex data.
+\t\fIAF_BUF_TEX\fP|A buffer representing a 2D texture object.
+.TE
+
+Buffers created with the type \fBAF_BUF_TEXTURE\fP must have the
+\fItex_width\fP field of \fIbuf\fP set to the width of the texture in pixels
+before a subsequent call to \fBaf_upload\fP.
+
+Once a buffer is no longer in use, it should be destroyed with
+a call to \fBaf_killbuf\fP.
+
+.SH SEE ALSO
+\fBaf_killbuf\fP(3), \fBaf_upload\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

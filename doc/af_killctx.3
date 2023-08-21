@@ -1,0 +1,29 @@
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_killctx 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_killctx\fP \- destroy graphics context
+
+.SH SYNOPSIS
+enum af_err \fBaf_killctx\fP(
+struct af_ctx* \fIctx\fP
+)
+
+.SH DESCRIPTION
+\fBaf_killctx\fP destroys the graphics context in the storage pointed to
+by \fIctx\fP which was previously passed to \fBaf_mkctx\fP(3).
+
+Upon a call to \fBaf_killctx\fP, all objects created under \fIctx\fP (i.e.
+whose \fBaf_mk\fP call took \fIctx\fP as their graphics context) become
+invalid and any use is undefined. This includes \fBaf_kill\fP calls and as
+such all such objects should be destroyed before a call to \fBaf_killctx\fP.
+
+Following a call to \fBaf_killctx\fP, the storage pointed to by \fIctx\fP is
+safe to use for a new graphics context.
+
+.SH SEE ALSO
+\fBaf_mkctx\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

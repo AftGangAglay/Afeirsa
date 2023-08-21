@@ -1,0 +1,55 @@
+.\" SPDX-License-Identifier: GPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_mkctx 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_mkctx\fP \- create graphics context
+
+.SH SYNOPSIS
+enum af_err \fBaf_mkctx\fP(
+struct af_ctx* \fIctx\fP,
+enum af_fidelity \fIfidelity\fP
+)
+
+.SH DESCRIPTION
+\fBaf_mkctx\fP creates a new graphics context in the storage pointed to
+by \fIctx\fP. Only one context may be initialized per process, however a
+context can be re-created after a previous context has been destroyed.
+
+\fBaf_mkctx\fP must only be called from the main thread, and any calls
+making use of the resultant graphics object may only be made from the main
+thread.
+
+A graphics context is required for almost all Afeirsa features and is
+typically the first object a user will initialize.
+
+\fIfidelity\fP specifies the quality hint which should be set in the graphics
+context. The significance of available values are detailed below.
+.TS
+tab(|);
+l l .
+\t\fIAF_FIDELITY_NONE\fP|Quality should not be specified.
+\t\fIAF_FIDELITY_NICE\fP|Prefer higher quality over performance.
+\t\fIAF_FIDELITY_FAST\fP|Prefer greater performance over quality.
+.TE
+
+If the library was compiled without \fIUSE_STDLIB\fP, the \fIfree\fP,
+\fImalloc\fP and \fIrealloc\fP fields of \fIctx\fP must be set to appropriate
+allocation functions before a call to \fBaf_mkctx\fP.
+
+During initialization, the GL version and available extensions are checked to
+determine whether the implementation provides features which would otherwise
+be emulated by the library.
+If the library was compiled with \fINO_EXT\fP, extensions will not be used
+to implement library-level features.
+If the library was compiled with \fIGL10_COMPAT\fP, features from GL versions
+beyond 1.0 will not be used to implement library-level features.
+
+Once the context is no longer in use, it should be destroyed with
+a call to \fBaf_killctx\fP(3).
+
+.SH SEE ALSO
+\fBaf_killctx\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)
