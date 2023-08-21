@@ -33,18 +33,18 @@ $(OBJECTS): $(HEADERS)
 
 .PHONY: install
 install: $(OUT)
-	-mkdir -p $(PREFIX)/include/afeirsa
-	-mkdir -p $(PREFIX)/lib/pkgconfig
-ifeq ($(shell uname -s),Darwin)
-	install $(OUT) $(PREFIX)/lib
-	strip -x $(OUT)
-else
-	install -s $(OUT) $(PREFIX)/lib
-endif
-	install $(HEADERS) $(PREFIX)/include/afeirsa
+	install -d $(PREFIX)/include/afeirsa
+	install -d $(PREFIX)/lib/pkgconfig
+	install -d $(PREFIX)/share/man/man3
 
-	echo "prefix=$(PREFIX)" > $(PREFIX)/lib/pkgconfig/afeirsa.pc
-	cat build/afeirsa.pc.in >> $(PREFIX)/lib/pkgconfig/afeirsa.pc
+	install $(OUT) $(PREFIX)/lib
+
+	install $(HEADERS) $(PREFIX)/include/afeirsa
+	install $(wildcard doc/*.3) $(PREFIX)/share/man/man3
+
+	echo "prefix=$(PREFIX)" > /tmp/afeirsa.pc
+	cat build/afeirsa.pc.in >> /tmp/afeirsa.pc
+	install /tmp/afeirsa.pc $(PREFIX)/lib/pkgconfig/
 
 .PHONY: clean
 clean:
