@@ -177,7 +177,7 @@ enum af_err af_mkdrawlist(
 							drawbuf->primitive));
 						break;
 					}
-					case AF_RUNDRAW: {
+					case AF_DRAW: {
 						AF_CHK(af_draw(ctx, drawlist));
 						break;
 					}

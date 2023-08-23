@@ -27,7 +27,7 @@ enum af_drawop_type {
 	/*
 	 * Run a different drawlist.
 	 */
-	AF_RUNDRAW
+	AF_DRAW
 };
 
 enum af_primitive {
