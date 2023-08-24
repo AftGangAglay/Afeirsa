@@ -1,0 +1,33 @@
+.\" SPDX-License-Identifier: LGPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_drawbuf 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_drawbuf\fP \- render vertex data
+
+.SH SYNOPSIS
+enum af_err \fBaf_drawbuf\fP(
+struct af_ctx* \fIctx\fP,
+struct af_buf* \fIbuf\fP,
+struct af_vert* \fIvert\fP,
+enum af_primitive \fIprimitive\fP
+);
+
+.SH DESCRIPTION
+\fBaf_drawbuf\fP renders vertex data in the graphics buffer pointed to by
+\fIbuf\fP to the view area.
+\fIbuf\fP must have previously been passed to \fBaf_mkbuf\fP(3) with the type
+\fIAF_BUF_VERT\fP.
+The layout of vertices within \fIbuf\fP is specified by the vertex layout
+pointed to by \fIvert\fP which was previously passed to \fBaf_mkvert\fP(3).
+
+The drawn vertices are assembled into geometry based on the value of
+\fIprimitive\fP. The significance of available values is equivalent to those
+of their corresponding GL values - i.e. \fIAF_TRIANGLES\fP is implemented
+according to \fIGL_TRIANGLES\fP.
+
+.SH SEE ALSO
+\fBaf_mkbuf\fP(3), \fBaf_mkvert\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

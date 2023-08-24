@@ -14,13 +14,9 @@ struct af_buf* \fIbuf\fP
 .SH DESCRIPTION
 \fBaf_killbuf\fP destroys the graphics buffer object in the storage pointed to
 by \fIbuf\fP which was previously passed to \fBaf_mkbuf\fP(3).
-Any operations involving the buffer (including drawlist operations the buffer
-may have been included in) are undefined after this point.
 
 Reinitializing a new graphics buffer in the same storage is not guaranteed to
-resolve any dangling references to a destroyed buffer. Given no dangling
-references are outstanding, the storage pointed to by \fIbuf\fP is safe to use
-for new buffers.
+resolve any dangling references to a destroyed buffer.
 
 .SH SEE ALSO
 \fBaf_mkbuf\fP(3)

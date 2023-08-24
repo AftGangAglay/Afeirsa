@@ -19,9 +19,6 @@ whose \fBaf_mk\fP call took \fIctx\fP as their graphics context) become
 invalid and any use is undefined. This includes \fBaf_kill\fP calls and as
 such all such objects should be destroyed before a call to \fBaf_killctx\fP.
 
-Following a call to \fBaf_killctx\fP, the storage pointed to by \fIctx\fP is
-safe to use for a new graphics context.
-
 .SH SEE ALSO
 \fBaf_mkctx\fP(3)
 

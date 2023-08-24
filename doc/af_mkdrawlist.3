@@ -1,0 +1,56 @@
+.\" SPDX-License-Identifier: LGPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_mkdrawlist 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_mkdrawlist\fP \- create draw command list
+
+.SH SYNOPSIS
+enum af_err \fBaf_mkdrawlist\fP(
+struct af_ctx* \fIctx\fP,
+struct af_drawlist* \fIdrawlist\fP,
+struct af_drawop* \fIops\fP,
+af_size_t \fIlen\fP
+)
+
+.SH DESCRIPTION
+\fBaf_mkdrawlist\fP creates a new draw command list in the storage pointed to
+by \fIdrawlist\fP. It does not perform any draw operations, but rather
+records them into the draw command list for efficient execution by
+\fBaf_draw\fP(3).
+
+\fIops\fP is a pointer to the beginning of an array of \fIlen\fP draw
+operations. The order of the array specifies the order in which operations will
+be performed. The members of each draw operation should be populated as
+follows.
+
+The \fItype\fP field specifies which drawing function the drawop should act as.
+For example - \fIAF_DRAWBUF\fP would signify an \fBaf_drawbuf\fP(3) operation.
+The parameters to the function in question are passed in structs in the union
+member \fIdata\fP - where \fIAF_DRAWBUF\fP corresponds to
+\fIdata\fP.\fIdrawbuf\fP etc.
+The significance of available \fItype\fP field values are detailed below.
+.TS
+tab(|);
+l l l .
+\t\fBValue\fP|\fBCall\fP|\fBParameters\fP
+\t\fIAF_DRAWBUF\fP|\fBaf_drawbuf\fP(3)|\fIdata\fP.\fIdrawbuf\fP
+\t\fIAF_SETTEX \fP|\fBaf_settex\fP(3)|\fIdata\fP.\fIsettex\fP
+\t\fIAF_SETMAT \fP|Not Yet Implemented|-
+\t\fIAF_DRAW   \fP|\fBaf_draw\fP(3)|\fIdata\fP.\fIdraw\fP
+.TE
+
+\fBaf_mkdrawlist\fP does take a copy of the operation list but does not copy
+objects entailed within the list such as buffers and other drawlists. It is
+up to the user to ensure that all values entailed in the operations specified
+are valid until the list is destroyed.
+
+Once a drawlist is no longer in use, it should be destroyed with
+a call to \fBaf_killdrawlist\fP(3).
+
+.SH SEE ALSO
+\fBaf_draw\fP(3), \fBaf_drawbuf\fP(3), \fBaf_settex\fP(3),
+\fBaf_killdrawlist\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

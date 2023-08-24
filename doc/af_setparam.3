@@ -1,0 +1,44 @@
+.\" SPDX-License-Identifier: LGPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_setparam 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_setparam\fP \- set draw parameter
+
+.SH SYNOPSIS
+enum af_err \fBaf_setparam\fP(
+struct af_ctx* \fIctx\fP,
+const char* \fIname\fP,
+struct af_param* \fIparam\fP,
+const void* \fIdata\fP
+)
+
+.SH DESCRIPTION
+\fBaf_setparam\fP sets a draw parameter. Draw parameters act as a way to
+abstract fixed-pipeline state and shader-based uniforms. \fIparam\fP describes
+the type of data pointed to by \fIdata\fP to be set in the draw parameter.
+The members of \fIparam\fP should be populated as follows.
+
+The \fIdatatype\fP field specifies the datatype of the parameter data pointed
+to by \fIdata\fP. Types are mapped by name to C types where \fIsigned\fP is
+noted with \fIS\fP and \fIunsigned\fP with \fIU\fP. For example \fIAF_UINT\fP
+would correspond to \fIunsigned int\fP. The \fIcount\fP parameter dictates the
+number of elements of type \fIdatatype\fP in the parameter data.
+The \fItype\fP field specifies the intended use for the parameter. The
+significance of available \fItype\fP field values are detailed below.
+.TS
+tab(|);
+l l .
+\t\fIAF_PARAM_NONE      \fP|Generic draw parameter. Will be ignored by fixed \
+pipeline.
+\t\fIAF_PARAM_MODELVIEW \fP|Model-view matrix parameter. The model-view \
+transform matrix to apply to geometry. Must be 16 floats.
+\t\fIAF_PARAM_PROJECTION\fP|Projection matrix parameter. The projection \
+matrix to apply to geometry. Must be 16 floats.
+.TE
+
+\fIname\fP does not serve a purpose outside of shader-based environments, where
+it prescribes the name of the uniform to be used for shader code.
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

@@ -1,0 +1,28 @@
+.\" SPDX-License-Identifier: LGPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_draw 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_draw\fP \- execute draw command list
+
+.SH SYNOPSIS
+enum af_err \fBaf_draw\fP(
+struct af_ctx* \fIctx\fP,
+struct af_drawlist* \fIdrawlist\fP
+)
+
+.SH DESCRIPTION
+\fBaf_draw\fP executes the draw command list pointed to by \fIdrawlist\fP.
+\fIdrawlist\fP must have previously been passed to \fBaf_mkdrawlist\fP(3).
+
+All operations entailed within the draw command list are executed in sequence
+in a manner nominally more efficient than individually executing them.
+
+The behaviors of each draw operation are outlined in the documentation
+for \fBaf_mkdrawlist\fP(3).
+
+.SH SEE ALSO
+\fBaf_mkdrawlist\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

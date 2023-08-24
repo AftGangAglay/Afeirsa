@@ -1,0 +1,27 @@
+.\" SPDX-License-Identifier: LGPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_settex 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_settex\fP \- set current texture
+
+.SH SYNOPSIS
+enum af_err \fBaf_settex\fP(
+struct af_ctx* \fIctx\fP,
+struct af_buf* \fItex\fP
+);
+
+.SH DESCRIPTION
+\fBaf_settex\fP sets the currently active texture to the texture object
+in the storage pointed to by \fItex\fP.
+\fItex\fP must have previously been passed to \fBaf_mkbuf\fP(3) with the type
+\fIAF_BUF_TEX\fP.
+
+The bound texture is applied to geometry with valid texture coordinates in
+subsequent calls to \fBaf_drawbuf\fP(3).
+
+.SH SEE ALSO
+\fBaf_mkbuf\fP(3), \fBaf_drawbuf\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

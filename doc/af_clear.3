@@ -1,0 +1,20 @@
+.\" SPDX-License-Identifier: LGPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_clear 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_clear\fP \- clear view area and depth buffer
+
+.SH SYNOPSIS
+enum af_err \fBaf_clear\fP(
+struct af_ctx* \fIctx\fP,
+const float* \fIcol4f\fP
+)
+
+.SH DESCRIPTION
+\fBaf_clear\fP clears the view area and depth buffer. The color used to clear
+is specified by 4 floats representing a normalized RBGA color pointed to by
+\fIcol4f\fP.
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

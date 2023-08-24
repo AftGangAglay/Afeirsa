@@ -1,0 +1,55 @@
+.\" SPDX-License-Identifier: LGPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_mkvert 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_mkvert\fP \- create vertex layout
+
+.SH SYNOPSIS
+enum af_err \fBaf_mkvert\fP(
+struct af_ctx* \fIctx\fP,
+struct af_vert* \fIvert\fP,
+const struct af_vert_element* \fIelements\fP,
+af_size_t \fIlen\fP
+)
+
+.SH DESCRIPTION
+\fBaf_mkvert\fP creates a new vertex layout description in the storage pointed
+to by \fIvert\fP. A vertex layout description serves to inform the library how
+to process the raw vertex data in a buffer into information suitable for
+drawing with.
+
+\fIelements\fP is a pointer to the beginning of an array of \fIlen\fP vertex
+elements. The whole array should describe all elements of a single vertex as it
+appears in a vertex buffer. The members of each element should be populated as
+follows.
+
+The \fIsize\fP field specifies the size - in bytes - of the vertex element
+per-vertex.
+The \fItype\fP field specifies the intended purpose of the vertex element in
+rendering. This is largely for fixed pipeline backends. The significance of
+available \fItype\fP field values are detailed below.
+.TS
+tab(|);
+l l .
+\t\fIAF_VERT_NONE\fP|Generic vertex element. Used for other purposes under \
+conditions with proper native vertex attributes. Will be ignored by \
+fixed pipeline.
+\t\fIAF_VERT_POS \fP|Position vertex element. Determines the position in 3D \
+space for the vertex as between 2 and 4 floats.
+\t\fIAF_VERT_COL \fP|Color vertex element. Determines the color of the vertex \
+in RGBA with 3 or 4 normalized floats.
+\t\fIAF_VERT_UV  \fP|Texture coordinate vertex element. Determines the \
+texture coordinate of the vertex with between 2 and 4 normalized floats.
+\t\fIAF_VERT_NORM\fP|Normal vector vertex element. Determines the normal \
+vector for the vertex as 3 normalized floats.
+.TE
+
+Once the handle is no longer in use, it should be destroyed with a call to
+\fBaf_killvert\fP(3).
+
+.SH SEE ALSO
+\fBaf_killvert\fP(3)
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)
