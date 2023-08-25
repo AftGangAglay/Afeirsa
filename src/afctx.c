@@ -15,7 +15,6 @@ static enum af_err af_set_gl_hints(enum af_fidelity fidelity);
 static enum af_err af_populate_features(struct af_ctx* ctx);
 
 enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
-
 	const char* extensions;
 
 	AF_PARAM_CHK(ctx);
@@ -23,14 +22,6 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 	af_memset(&ctx->features, 0, sizeof(struct af_features));
 
 	af_memset(&ctx->drawlists, 0, sizeof(struct af_handleset));
-
-	AF_CHK(af_set_gl_hints(fidelity));
-
-	glEnable(GL_TEXTURE_2D);
-	AF_GL_CHK;
-
-	glEnable(GL_DEPTH_TEST);
-	AF_GL_CHK;
 
 #ifdef USE_STDLIB
 	ctx->malloc = malloc;
@@ -48,6 +39,16 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 		AF_ERR_BAD_CTX
 	);
 #endif
+
+	{
+		const char* ver = (const char*) glGetString(GL_VERSION);
+		if(!ver) {
+			/* GL context appears to be broken. */
+			return AF_ERR_NO_GL;
+		}
+		ctx->gl_ver[0] = ver[0] - '0';
+		ctx->gl_ver[1] = ver[2] - '0';
+	}
 
 	extensions = (const char*) glGetString(GL_EXTENSIONS);
 
@@ -84,11 +85,13 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 		}
 	}
 
-	{
-		const char* ver = (const char*) glGetString(GL_VERSION);
-		ctx->gl_ver[0] = ver[0] - '0';
-		ctx->gl_ver[1] = ver[2] - '0';
-	}
+	AF_CHK(af_set_gl_hints(fidelity));
+
+	glEnable(GL_TEXTURE_2D);
+	AF_GL_CHK;
+
+	glEnable(GL_DEPTH_TEST);
+	AF_GL_CHK;
 
 	AF_CHK(af_populate_features(ctx));
 
@@ -117,7 +120,6 @@ static enum af_err af_set_gl_hints(enum af_fidelity fidelity) {
 	af_uint_t mode;
 	af_size_t i;
 
-	/* TODO: Extension hints. Is there an "enumerate hints" glGet? */
 	const af_uint_t gl_hints[] = {
 #ifdef GL_FOG_HINT
 		GL_FOG_HINT,
@@ -179,15 +181,6 @@ static enum af_err af_populate_features(struct af_ctx* ctx) {
 
 #ifdef GL_VERSION_1_1
 	if(ctx->gl_ver[1] > 0) ctx->features.multitexture = AF_CORE;
-/* TODO: Not sure how multitexture extension is intended to be used. */
-/*
-#else
-# if defined(GL_ARB_multitexture) && !defined(NO_EXT)
-	if(af_haveext(ctx, "GL_ARB_multitexture")) {
-		ctx->features.multitexture = AF_ARB;
-	}
-# endif
-*/
 #endif
 
 #ifdef GL_VERSION_2_0

@@ -6,21 +6,31 @@
 #ifndef AF_GL_H
 #define AF_GL_H
 
-#ifdef __APPLE__
+#if !defined(NSGL) && !defined(GLXABI)
+# ifdef AF_BUILD
+#  pragma "Auto-detecting GL backend during in-tree build"
+# endif
+# ifdef __APPLE__
+#  define NSGL
+# else
+#  define GLXABI
+# endif
+#endif
+
+#ifdef NSGL
 # define GL_SILENCE_DEPRECATION 1
 # include <OpenGL/gl.h>
 # include <OpenGL/glext.h>
-/* TODO: Detect this from SDK ver or otherwise
-# define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED 1
-# include <OpenGL/gl3.h>
-# include <OpenGL/gl3ext.h>
-*/
 # include <OpenGL/glu.h>
 # undef GL_SILENCE_DEPRECATION
-#else
+#endif
+
+#ifdef GLXABI
+# define GL_GLEXT_PROTOTYPES
 # include <GL/gl.h>
 # include <GL/glext.h>
 # include <GL/glu.h>
+# undef GL_GLEXT_PROTOTYPES
 #endif
 
 #ifdef GL10_COMPAT
@@ -57,6 +67,11 @@
 
 enum af_err af_gl_chk(void);
 void af_gl_err_clear(void);
+
+#ifndef AF_BUILD
+# undef NSGL
+# undef GLXABI
+#endif
 
 #endif
 

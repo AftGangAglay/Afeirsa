@@ -12,6 +12,7 @@ enum af_err {
 	AF_ERR_BAD_PARAM,
 	AF_ERR_BAD_CTX,
 	AF_ERR_BAD_OP,
+	AF_ERR_NO_GL,
 	AF_ERR_MEM
 };
 
