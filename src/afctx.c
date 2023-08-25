@@ -117,7 +117,7 @@ enum af_err af_setview(struct af_ctx* ctx, af_uint_t w, af_uint_t h) {
 }
 
 static enum af_err af_set_gl_hints(enum af_fidelity fidelity) {
-	af_uint_t mode;
+	af_uint_t mode = GL_DONT_CARE;
 	af_size_t i;
 
 	const af_uint_t gl_hints[] = {

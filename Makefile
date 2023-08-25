@@ -12,16 +12,11 @@ endif
 ifdef BUILD_SHARED
 	ifdef APPLE
 		OUT = src/libafeirsa.dylib
-		LTFLAGS = -dynamic $(LDFLAGS)
 	else
 		OUT = src/libafeirsa.so
-		LTFLAGS = -dynamic $(LDFLAGS)
-
-		LDFLAGS += -lGL
 	endif
 else
 	OUT = src/libafeirsa.a
-	LTFLAGS = -static
 endif
 
 XQUARTZ_ROOT = /opt/X11
@@ -70,14 +65,19 @@ PREFIX = /usr/local
 .PHONY: all
 all: $(OUT)
 $(OUT): $(OBJECTS)
-	libtool $(LTFLAGS) -o $@ $^
+ifdef BUILD_SHARED
+	libtool -dynamic $(LDFLAGS) -o $@ $^
+else
+	ar rcs $@ $^
+endif
 
 $(OBJECTS): $(HEADERS)
 
 .PHONY: install
+install: PCTMP := $(shell mktemp)
 install: $(OUT)
 ifdef DEBUG
-	echo "warning: installing debug binaries!"
+	@echo "warning: installing debug binaries!"
 endif
 	strip -x $(OUT)
 
@@ -90,10 +90,10 @@ endif
 	install $(HEADERS) $(PREFIX)/include/afeirsa
 	install $(wildcard doc/*.3) $(PREFIX)/share/man/man3
 
-	echo "prefix=$(PREFIX)" > /tmp/afeirsa.pc
-	echo "version=$(VERSION)" >> /tmp/afeirsa.pc
-	cat build/afeirsa.pc.in >> /tmp/afeirsa.pc
-	install /tmp/afeirsa.pc $(PREFIX)/lib/pkgconfig/
+	echo "prefix=$(PREFIX)" > $(PCTMP)
+	echo "version=$(VERSION)" >> $(PCTMP)
+	cat build/afeirsa.pc.in >> $(PCTMP)
+	install $(PCTMP) $(PREFIX)/lib/pkgconfig/afeirsa.pc
 
 .PHONY: clean
 clean:
