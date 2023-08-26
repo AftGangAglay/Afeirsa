@@ -8,15 +8,7 @@ EXAMPLES_CFLAGS := $(CFLAGS)
 EXAMPLES_CFLAGS += $(shell pkg-config --cflags glfw3)
 
 EXAMPLES_LDFLAGS := $(LDFLAGS)
-EXAMPLES_LDFLAGS += $(AFEIRSA_LIB) $(shell pkg-config --libs glfw3) -lm
-
-# TODO: Use master makefile config
-UNAME = $(shell uname -s)
-ifeq ($(UNAME),Darwin)
-EXAMPLES_LDFLAGS += -framework OpenGL
-else
-EXAMPLES_LDFLAGS += -lGL
-endif
+EXAMPLES_LDFLAGS += $(OUT) $(shell pkg-config --libs glfw3) -lm
 
 $(EXAMPLES): CFLAGS := $(EXAMPLES_CFLAGS)
 $(EXAMPLES): LDFLAGS := $(EXAMPLES_LDFLAGS)
