@@ -6,6 +6,10 @@
 #ifndef AF_VERT_H
 #define AF_VERT_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <afeirsa/aferr.h>
 #include <afeirsa/aftypes.h>
 #include <afeirsa/afctx.h>
@@ -36,5 +40,9 @@ enum af_err af_mkvert(
 		const struct af_vert_element* elements, af_size_t len);
 
 enum af_err af_killvert(struct af_ctx* ctx, struct af_vert* vert);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif

@@ -6,6 +6,10 @@
 #ifndef AF_DRAW_H
 #define AF_DRAW_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <afeirsa/aferr.h>
 #include <afeirsa/afctx.h>
 #include <afeirsa/afbuf.h>
@@ -88,5 +92,9 @@ enum af_err af_killdrawlist(struct af_ctx* ctx, struct af_drawlist* drawlist);
 enum af_err af_draw(struct af_ctx* ctx, struct af_drawlist* drawlist);
 
 enum af_err af_clear(struct af_ctx* ctx, const float* col4f);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif

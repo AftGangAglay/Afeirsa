@@ -6,6 +6,10 @@
 #ifndef AF_AFEIRSA_H
 #define AF_AFEIRSA_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <afeirsa/aftypes.h>
 #include <afeirsa/aferr.h>
 #include <afeirsa/afdefs.h>
@@ -14,6 +18,10 @@
 #include <afeirsa/afvert.h>
 #include <afeirsa/afdraw.h>
 #include <afeirsa/afparam.h>
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif
 

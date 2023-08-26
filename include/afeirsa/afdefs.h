@@ -6,6 +6,10 @@
 #ifndef AF_DEFS_H
 #define AF_DEFS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <afeirsa/aferr.h>
 #include <afeirsa/aftypes.h>
 
@@ -37,6 +41,10 @@ void* af_memset(void* dst, int c, af_size_t n);
 
 af_size_t af_strlen(const char* s);
 af_bool_t af_streql(const char* a, const char* b);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif
 

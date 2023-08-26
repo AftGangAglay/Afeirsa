@@ -6,6 +6,10 @@
 #ifndef AF_PARAM_H
 #define AF_PARAM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <afeirsa/aferr.h>
 #include <afeirsa/afctx.h>
 #include <afeirsa/aftypes.h>
@@ -34,5 +38,9 @@ struct af_param {
 enum af_err af_setparam(
 		struct af_ctx* ctx, const char* name, struct af_param* param,
 		const void* data);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif

@@ -6,6 +6,10 @@
 #ifndef AF_BUF_H
 #define AF_BUF_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <afeirsa/aftypes.h>
 #include <afeirsa/aferr.h>
 #include <afeirsa/afctx.h>
@@ -35,6 +39,10 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf);
 enum af_err af_upload(
 		struct af_ctx* ctx, struct af_buf* buf,
 		const void* data, af_size_t size);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif
 

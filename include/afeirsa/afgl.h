@@ -6,6 +6,10 @@
 #ifndef AF_GL_H
 #define AF_GL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if !defined(NSGL) && !defined(GLXABI)
 # ifdef AF_BUILD
 #  pragma "Auto-detecting GL backend during in-tree build"
@@ -71,6 +75,10 @@ void af_gl_err_clear(void);
 #ifndef AF_BUILD
 # undef NSGL
 # undef GLXABI
+#endif
+
+#ifdef __cplusplus
+};
 #endif
 
 #endif

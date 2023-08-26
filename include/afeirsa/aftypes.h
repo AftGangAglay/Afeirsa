@@ -6,7 +6,11 @@
 #ifndef AF_TYPES_H
 #define AF_TYPES_H
 
-typedef unsigned char	af_uchar_t;
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+	typedef unsigned char	af_uchar_t;
 typedef unsigned short	af_ushort_t;
 typedef unsigned int	af_uint_t;
 typedef unsigned long	af_ulong_t;
@@ -47,5 +51,9 @@ enum af_datatype {
 	AF_FLOAT,
 	AF_DOUBLE
 };
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif

@@ -6,7 +6,11 @@
 #ifndef AF_ERR_H
 #define AF_ERR_H
 
-enum af_err {
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+	enum af_err {
 	AF_ERR_NONE,
 	AF_ERR_UNKNOWN,
 	AF_ERR_BAD_PARAM,
@@ -21,5 +25,9 @@ enum af_err {
 		enum af_err err = c; \
 		if(err) return err; \
 	} while(0)
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif

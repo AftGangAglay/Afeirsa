@@ -6,6 +6,10 @@
 #ifndef AF_CTX_H
 #define AF_CTX_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <afeirsa/aftypes.h>
 #include <afeirsa/aferr.h>
 
@@ -70,5 +74,9 @@ enum af_err af_mkhandle(
 enum af_err af_killhandle(
 		struct af_ctx* ctx,
 		struct af_handleset* set, af_uint_t handle);
+
+#ifdef __cplusplus
+};
+#endif
 
 #endif
