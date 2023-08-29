@@ -192,6 +192,8 @@ int main(void) {
 			echk("af_draw", af_draw(&ctx, &drawlist));
 		}
 
+		echk("af_drawbuf", af_drawbuf(&ctx, &buf, &vert, AF_TRIANGLE_FAN));
+
 		glfwPollEvents();
 		glfwchk("glfwPollEvents");
 

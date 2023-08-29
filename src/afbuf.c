@@ -43,11 +43,20 @@ enum af_err af_mkbuf(
 		return AF_ERR_NONE;
 	}
 
-	if(ctx->features.buffers && gl_type) {
+	{
+		void (*proc)(int, af_uint_t*);
 #ifdef GL_VERSION_2_0
-		/* TODO: Native buffer init */
-		return AF_ERR_NONE;
+		if(ctx->features.buffers == AF_CORE) proc = glGenBuffers;
 #endif
+#ifdef GL_ARB_vertex_buffer_object
+		if(ctx->features.buffers == AF_ARB) proc = glGenBuffersARB;
+#endif
+
+		if(ctx->features.buffers && gl_type) {
+			proc(1, &buf->gl_handle);
+			AF_GL_CHK;
+			return AF_ERR_NONE;
+		}
 	}
 
 	return AF_ERR_NONE;
@@ -68,11 +77,20 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 		return AF_ERR_NONE;
 	}
 
-	if(ctx->features.buffers) {
+	{
+		void (*proc)(int, const af_uint_t*);
 #ifdef GL_VERSION_2_0
-		/* TODO: Native buffer cleanup */
-		return AF_ERR_NONE;
+		if(ctx->features.buffers == AF_CORE) proc = glDeleteBuffers;
 #endif
+#ifdef GL_ARB_vertex_buffer_object
+		if(ctx->features.buffers == AF_ARB) proc = glDeleteBuffersARB;
+#endif
+
+		if(ctx->features.buffers) {
+			proc(1, &buf->gl_handle);
+			AF_GL_CHK;
+			return AF_ERR_NONE;
+		}
 	}
 
 	ctx->free(buf->storage);
@@ -109,11 +127,30 @@ enum af_err af_upload(
 		}
 	}
 
-	if(ctx->features.buffers) {
+	{
+		void (*bind_proc)(af_uint_t, af_uint_t);
+		void (*data_proc)(af_uint32_t, long, const void*, af_uint32_t);
 #ifdef GL_VERSION_2_0
-		/* TODO: Native buffer upload */
-		return AF_ERR_NONE;
+		if(ctx->features.buffers == AF_CORE) {
+			bind_proc = glBindBuffer;
+			data_proc = glBufferData;
+		}
 #endif
+#ifdef GL_ARB_vertex_buffer_object
+		if(ctx->features.buffers == AF_ARB) {
+			bind_proc = glBindBufferARB;
+			data_proc = glBufferDataARB;
+		}
+#endif
+
+		if(ctx->features.buffers) {
+			af_uint_t type = af_gl_buf_type(buf->type);
+			bind_proc(type, buf->gl_handle);
+			AF_GL_CHK;
+			data_proc(type, (long) size, data, GL_STATIC_DRAW);
+			AF_GL_CHK;
+			return AF_ERR_NONE;
+		}
 	}
 
 	if(!( buf->storage = ctx->malloc(size) )) return AF_ERR_MEM;

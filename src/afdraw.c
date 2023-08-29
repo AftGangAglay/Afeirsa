@@ -35,8 +35,12 @@ enum af_err af_drawbuf(
 	AF_VERIFY(buf->type == AF_BUF_VERT, AF_ERR_BAD_PARAM);
 
 	if(ctx->features.buffers) {
+		/* TODO: Unclear how to use this from extension */
 #ifdef GL_VERSION_2_0
-		/* TODO: Native buffer draw */
+		glDrawArrays(
+			af_gl_primitive(primitive),
+			0, (int) (buf->size / vert->stride));
+		AF_GL_CHK;
 		return AF_ERR_NONE;
 #endif
 	}
