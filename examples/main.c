@@ -4,6 +4,7 @@
  */
 
 #include <afeirsa/afeirsa.h>
+#include <afeirsa/afgl.h>
 #include <GLFW/glfw3.h>
 #include <math.h>
 #include <stdio.h>
@@ -144,6 +145,8 @@ int main(void) {
 	echk(
 		"af_mkdrawlist",
 		af_mkdrawlist(&ctx, &drawlist, drawops, AF_ARRLEN(drawops)));
+
+	puts((const char*) glGetString(GL_VERSION));
 
 	while(!glfwWindowShouldClose(window)) {
 		float proj[] = {

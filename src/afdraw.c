@@ -60,41 +60,42 @@ enum af_err af_drawbuf(
 				af_size_t min;
 				af_size_t max;
 
+				/* GL procs might not be compile time constants (e.g. glad) */
+				af_attrib_proc_t col_procs[2];
+				af_attrib_proc_t pos_procs[3];
+				af_attrib_proc_t uv_procs[4];
+				af_attrib_proc_t norm_proc = glNormal3fv;
 				switch(element->type) {
 					default: break;
 					case AF_VERT_COL: {
-						static const af_attrib_proc_t col_procs[] = {
-							glColor3fv, glColor4fv
-						};
+						col_procs[0] = glColor3fv;
+						col_procs[1] = glColor4fv;
 						procs = col_procs;
 						min = 3;
 						max = 4;
 						break;
 					}
 					case AF_VERT_POS: {
-						static const af_attrib_proc_t pos_procs[] = {
-							glVertex2fv, glVertex3fv, glVertex4fv
-						};
+						pos_procs[0] = glVertex2fv;
+						pos_procs[1] = glVertex3fv;
+						pos_procs[2] = glVertex4fv;
 						procs = pos_procs;
 						min = 2;
 						max = 4;
 						break;
 					}
 					case AF_VERT_UV: {
-						static const af_attrib_proc_t uv_procs[] = {
-							glTexCoord1fv, glTexCoord2fv, glTexCoord3fv,
-							glTexCoord4fv
-						};
+						uv_procs[0] = glTexCoord1fv;
+						uv_procs[1] = glTexCoord2fv;
+						uv_procs[2] = glTexCoord3fv;
+						uv_procs[3] = glTexCoord4fv;
 						procs = uv_procs;
 						min = 1;
 						max = 4;
 						break;
 					}
 					case AF_VERT_NORM: {
-						static const af_attrib_proc_t norm_procs[] = {
-							glNormal3fv
-						};
-						procs = norm_procs;
+						procs = &norm_proc;
 						min = 3;
 						max = 3;
 						break;
