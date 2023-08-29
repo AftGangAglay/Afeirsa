@@ -78,8 +78,9 @@ install: PCTMP := $(shell mktemp)
 install: $(OUT)
 ifdef DEBUG
 	@echo "warning: installing debug binaries!"
-endif
+else
 	strip -x $(OUT)
+endif
 
 	install -d $(PREFIX)/include/afeirsa
 	install -d $(PREFIX)/lib/pkgconfig
