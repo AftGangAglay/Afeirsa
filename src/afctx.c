@@ -152,7 +152,7 @@ static enum af_err af_set_gl_hints(enum af_fidelity fidelity) {
 			mode = GL_DONT_CARE;
 			break;
 		}
-        case AF_FIDELITY_NICE: {
+		case AF_FIDELITY_NICE: {
 			mode = GL_NICEST;
 			break;
 		}

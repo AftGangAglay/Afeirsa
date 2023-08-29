@@ -18,11 +18,11 @@ static void echk(const char* proc, enum af_err e) {
 		case AF_ERR_NONE: return;
 
 		case AF_ERR_UNKNOWN: n = "unknown"; break;
-        case AF_ERR_BAD_PARAM: n = "bad parameter"; break;
-        case AF_ERR_BAD_CTX: n = "bad context"; break;
-        case AF_ERR_BAD_OP: n = "bad operation"; break;
-        case AF_ERR_NO_GL: n = "no opengl"; break;
-        case AF_ERR_MEM: n = "out of memory"; break;
+   		case AF_ERR_BAD_PARAM: n = "bad parameter"; break;
+		case AF_ERR_BAD_CTX: n = "bad context"; break;
+		case AF_ERR_BAD_OP: n = "bad operation"; break;
+		case AF_ERR_NO_GL: n = "no opengl"; break;
+		case AF_ERR_MEM: n = "out of memory"; break;
 	}
 
 	fprintf(stderr, "%s: %s\n", proc, n);
