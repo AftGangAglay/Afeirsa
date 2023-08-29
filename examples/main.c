@@ -12,7 +12,7 @@
 static void echk(const char* proc, enum af_err e) {
 	const char* n;
 	switch(e) {
-		default:
+		default:;
 			AF_FALLTHROUGH;
 			/* FALLTHRU */
 		case AF_ERR_NONE: return;
