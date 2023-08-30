@@ -9,6 +9,7 @@ To build, run `make'. With the following variables set appropriately.
         NO_EXT	Disables use of OpenGL extensions
          DEBUG	Perform a debug build with symbols and no optimizations
 BUILD_EXAMPLES	Build example programs alongside the library
+         STDCC  Only use `cc' opts complying with X/Open LEGACY XCU `cc'
 
 			Installing
 

@@ -5,6 +5,13 @@ SOURCES = $(wildcard src/*.c)
 HEADERS = $(wildcard include/afeirsa/*.h)
 OBJECTS = $(SOURCES:.c=.o)
 
+ifdef STDCC
+	ifdef APPLE
+		# NSGL requires non-compliant `cc' shenanigans
+		GLXABI = 1
+	endif
+endif
+
 ifndef APPLE
 	GLXABI = 1
 endif
@@ -30,11 +37,12 @@ endif
 VERSION = $(shell cat VERSION)
 
 CFLAGS += -Iinclude -DVERSION=$(VERSION) -DAF_BUILD
-CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
+ifndef STDCC
+	CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
+endif
 
 ifndef NO_STDLIB
 	CFLAGS += -DUSE_STDLIB
-	LDFLAGS += -lc
 endif
 
 ifdef GL10_COMPAT
@@ -46,9 +54,17 @@ ifdef NO_EXT
 endif
 
 ifdef DEBUG
-	CFLAGS += -g -O0 -D_DEBUG
+	CFLAGS += -g -D_DEBUG
+	ifndef STDCC
+		CFLAGS += -O0
+	endif
 else
-	CFLAGS += -Ofast -DNDEBUG
+	CFLAGS += -DNDEBUG
+	ifndef STDCC
+		CFLAGS += -Ofast
+	else
+		CFLAGS += -O
+	endif
 endif
 
 PREFIX = /usr/local
@@ -57,7 +73,9 @@ PREFIX = /usr/local
 .PHONY: all
 all: $(OUT)
 
+.NOTPARALLEL: $(OUT)
 $(OUT): $(OUT)($(OBJECTS))
+	ranlib $(OUT)
 
 $(OBJECTS): $(HEADERS)
 
