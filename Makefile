@@ -81,6 +81,7 @@ endif
 
 	echo "prefix=$(PREFIX)" > $(PCTMP)
 	echo "version=$(VERSION)" >> $(PCTMP)
+	echo "ldflags=$(LDFLAGS)" >> $(PCTMP)
 	cat build/afeirsa.pc.in >> $(PCTMP)
 	install $(PCTMP) $(PREFIX)/lib/pkgconfig/afeirsa.pc
 
