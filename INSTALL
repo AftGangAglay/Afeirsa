@@ -2,7 +2,6 @@
 
 To build, run `make'. With the following variables set appropriately.
 
-  BUILD_SHARED  Build as a dynamic library
          APPLE  Must be defined when building on macOS
         GLXABI  Use `<GL/*>' for GL includes. Switches macOS to use XQuartz
      NO_STDLIB	Disables use of the standard library

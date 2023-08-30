@@ -9,15 +9,7 @@ ifndef APPLE
 	GLXABI = 1
 endif
 
-ifdef BUILD_SHARED
-	ifdef APPLE
-		OUT = src/libafeirsa.dylib
-	else
-		OUT = src/libafeirsa.so
-	endif
-else
-	OUT = src/libafeirsa.a
-endif
+OUT = src/libafeirsa.a
 
 XQUARTZ_ROOT = /opt/X11
 ifdef GLXABI
@@ -64,12 +56,8 @@ PREFIX = /usr/local
 .DEFAULT_GOAL := all
 .PHONY: all
 all: $(OUT)
-$(OUT): $(OBJECTS)
-ifdef BUILD_SHARED
-	libtool -dynamic $(LDFLAGS) -o $@ $^
-else
-	ar rcs $@ $^
-endif
+
+$(OUT): $(OUT)($(OBJECTS))
 
 $(OBJECTS): $(HEADERS)
 
