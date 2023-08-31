@@ -2,16 +2,17 @@
 # Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
 
 EXAMPLES_SOURCES = $(wildcard examples/*.c)
+EXAMPLES_OBJECTS = $(EXAMPLES_SOURCES:.c=.o)
 EXAMPLES = $(EXAMPLES_SOURCES:.c=)
 
 EXAMPLES_CFLAGS := $(CFLAGS)
 EXAMPLES_CFLAGS += $(shell pkg-config --cflags glfw3)
 
-EXAMPLES_LDFLAGS := $(LDFLAGS)
-EXAMPLES_LDFLAGS += $(OUT) $(shell pkg-config --libs glfw3) -lm
+EXAMPLES_LDLIBS := $(LDFLAGS)
+EXAMPLES_LDLIBS += $(OUT) $(shell pkg-config --libs glfw3) -lm
 
 $(EXAMPLES): CFLAGS := $(EXAMPLES_CFLAGS)
-$(EXAMPLES): LDFLAGS := $(EXAMPLES_LDFLAGS)
+$(EXAMPLES): LDLIBS := $(EXAMPLES_LDLIBS)
 $(EXAMPLES): $(EXAMPLES_SOURCES) $(OUT)
 
 all: examples
