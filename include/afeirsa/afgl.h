@@ -10,18 +10,18 @@
 extern "C" {
 #endif
 
-#if !defined(NSGL) && !defined(GLXABI)
+#if !defined(AF_NSGL) && !defined(AF_GLXABI)
 # ifdef AF_BUILD
 #  pragma "Auto-detecting GL backend during in-tree build"
 # endif
 # ifdef __APPLE__
-#  define NSGL
+#  define AF_NSGL
 # else
-#  define GLXABI
+#  define AF_GLXABI
 # endif
 #endif
 
-#ifdef NSGL
+#ifdef AF_NSGL
 # define GL_SILENCE_DEPRECATION 1
 # include <OpenGL/gl.h>
 # include <OpenGL/glext.h>
@@ -29,7 +29,7 @@ extern "C" {
 # undef GL_SILENCE_DEPRECATION
 #endif
 
-#ifdef GLXABI
+#ifdef AF_GLXABI
 # define GL_GLEXT_PROTOTYPES
 # include <GL/gl.h>
 # include <GL/glext.h>
@@ -71,11 +71,6 @@ extern "C" {
 
 enum af_err af_gl_chk(void);
 void af_gl_err_clear(void);
-
-#ifndef AF_BUILD
-# undef NSGL
-# undef GLXABI
-#endif
 
 #ifdef __cplusplus
 };

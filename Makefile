@@ -7,7 +7,7 @@ OBJECTS = $(SOURCES:.c=.o)
 
 ifdef STDCC
 	ifdef APPLE
-		# NSGL requires non-compliant `cc' shenanigans
+		# AF_NSGL requires non-compliant `cc' shenanigans
 		GLXABI = 1
 	endif
 endif
@@ -20,7 +20,7 @@ OUT = src/libafeirsa.a
 
 XQUARTZ_ROOT = /opt/X11
 ifdef GLXABI
-	CFLAGS += -DGLXABI
+	GLABI += -DAF_GLXABI
 	LDFLAGS += -lGL
 
 	ifdef APPLE
@@ -29,14 +29,14 @@ ifdef GLXABI
 	endif
 else
 	ifdef APPLE
-		CFLAGS += -DNSGL
+		GLABI += -DAF_NSGL
 		LDFLAGS += -framework OpenGL
 	endif
 endif
 
 VERSION = $(shell cat VERSION)
 
-CFLAGS += -Iinclude -DVERSION=$(VERSION) -DAF_BUILD
+CFLAGS += -Iinclude -DVERSION=$(VERSION) -DAF_BUILD $(GLABI)
 ifndef STDCC
 	CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
 endif
@@ -100,6 +100,7 @@ endif
 	echo "prefix=$(PREFIX)" > $(PCTMP)
 	echo "version=$(VERSION)" >> $(PCTMP)
 	echo "ldflags=$(LDFLAGS)" >> $(PCTMP)
+	echo "glabi=$(GLABI)" >> $(PCTMP)
 	cat build/afeirsa.pc.in >> $(PCTMP)
 	install $(PCTMP) $(PREFIX)/lib/pkgconfig/afeirsa.pc
 

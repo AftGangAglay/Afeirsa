@@ -5,4 +5,4 @@ Name: Afeirsa
 Version: ${version}
 Description: OpenGL Version-Agnostic Abstraction
 Libs: -L${libdir} -lafeirsa ${ldflags}
-Cflags: -I${includedir}
+Cflags: -I${includedir} ${glabi}
