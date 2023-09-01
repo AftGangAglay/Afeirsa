@@ -1,0 +1,19 @@
+.\" SPDX-License-Identifier: LGPL-3.0-or-later
+.\" Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
+
+.TH af_flush 3 "" "" "Afeirsa"
+.SH NAME
+\fBaf_flush\fP \- send outstanding commands to device
+
+.SH SYNOPSIS
+enum af_err \fBaf_flush\fP(
+struct af_ctx* \fIctx\fP
+)
+
+.SH DESCRIPTION
+\fBaf_flush\fP sends all outstanding GL commands to the graphics device. This
+may be desirable before swapping buffers if the display surface does not do so
+automatically.
+
+.SH AUTHOR
+Emily "TTG" Banerjee (prs.ttg+afeirsa@pm.me)

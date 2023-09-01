@@ -215,3 +215,12 @@ af_bool_t af_haveext(struct af_ctx* ctx, const char* ext) {
 
 	return AF_FALSE;
 }
+
+enum af_err af_flush(struct af_ctx* ctx) {
+    AF_CTX_CHK(ctx);
+
+    glFlush();
+    AF_GL_CHK;
+
+    return AF_ERR_NONE;
+}
