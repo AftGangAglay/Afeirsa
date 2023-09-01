@@ -8,7 +8,7 @@
 #include <afeirsa/afgl.h>
 
 enum af_err af_setparam(
-		struct af_ctx* ctx, const char* name, struct af_param* param,
+		struct af_ctx* ctx, const char* name, const struct af_param* param,
 		const void* data) {
 
 	af_uint_t target;
