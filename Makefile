@@ -21,22 +21,22 @@ OUT = src/libafeirsa.a
 XQUARTZ_ROOT = /opt/X11
 ifdef GLXABI
 	GLABI += -DAF_GLXABI
-	LDFLAGS += -lGL
+	LDFLAGS += -lGL -lglut -lGLU
 
 	ifdef APPLE
 		LDFLAGS += -L$(XQUARTZ_ROOT)/lib
-		CFLAGS += -I$(XQUARTZ_ROOT)/include
+		PUBLIC_IFLAGS += -I$(XQUARTZ_ROOT)/include
 	endif
 else
 	ifdef APPLE
 		GLABI += -DAF_NSGL
-		LDFLAGS += -framework OpenGL
+		LDFLAGS += -framework GLUT -framework OpenGL
 	endif
 endif
 
 VERSION = $(shell cat VERSION)
 
-CFLAGS += -Iinclude -DVERSION=$(VERSION) -DAF_BUILD $(GLABI)
+CFLAGS += -Iinclude -DVERSION=$(VERSION) -DAF_BUILD $(GLABI) $(PUBLIC_IFLAGS)
 ifndef STDCC
 	CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
 endif
@@ -101,6 +101,7 @@ endif
 	echo "version=$(VERSION)" >> $(PCTMP)
 	echo "ldflags=$(LDFLAGS)" >> $(PCTMP)
 	echo "glabi=$(GLABI)" >> $(PCTMP)
+	echo "iflags=$(PUBLIC_IFLAGS)" >> $(PCTMP)
 	cat build/afeirsa.pc.in >> $(PCTMP)
 	install $(PCTMP) $(PREFIX)/lib/pkgconfig/afeirsa.pc
 

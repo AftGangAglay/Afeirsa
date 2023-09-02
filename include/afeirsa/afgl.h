@@ -21,11 +21,19 @@ extern "C" {
 # endif
 #endif
 
+/*
+ * NOTE: We include GLUT and GLU here even though we don't currently use them
+ * 		 internally as it provides the user with a GL ABI consistent version of
+ * 		 the respective libraries - which avoids the user needing to use the
+ * 		 `AF_NSGL' and `AF_GLXABI' macros themselves.
+ */
+
 #ifdef AF_NSGL
 # define GL_SILENCE_DEPRECATION 1
 # include <OpenGL/gl.h>
 # include <OpenGL/glext.h>
 # include <OpenGL/glu.h>
+# include <GLUT/glut.h>
 # undef GL_SILENCE_DEPRECATION
 #endif
 
@@ -34,6 +42,7 @@ extern "C" {
 # include <GL/gl.h>
 # include <GL/glext.h>
 # include <GL/glu.h>
+# include <GL/glut.h>
 # undef GL_GLEXT_PROTOTYPES
 #endif
 
