@@ -6,6 +6,8 @@
 	$(AR) $(ARFLAGS) $@ $?
 	ranlib $@
 
+include build/glabi.mk
+
 SOURCES = $(wildcard src/*.c)
 HEADERS = $(wildcard include/afeirsa/*.h)
 OBJECTS = $(SOURCES:.c=.o)
@@ -17,27 +19,7 @@ ifdef STDCC
 	endif
 endif
 
-ifndef APPLE
-	GLXABI = 1
-endif
-
 OUT = src/libafeirsa.a
-
-XQUARTZ_ROOT = /opt/X11
-ifdef GLXABI
-	GLABI += -DAF_GLXABI
-	LDFLAGS += -lGL -lglut -lGLU
-
-	ifdef APPLE
-		LDFLAGS += -L$(XQUARTZ_ROOT)/lib
-		PUBLIC_IFLAGS += -I$(XQUARTZ_ROOT)/include
-	endif
-else
-	ifdef APPLE
-		GLABI += -DAF_NSGL
-		LDFLAGS += -framework GLUT -framework OpenGL
-	endif
-endif
 
 VERSION = $(shell cat VERSION)
 
@@ -102,7 +84,7 @@ endif
 
 	echo "prefix=$(PREFIX)" > $(PCTMP)
 	echo "version=$(VERSION)" >> $(PCTMP)
-	echo "ldflags=$(LDFLAGS)" >> $(PCTMP)
+	echo "ldflags=$(LDLIBS)" >> $(PCTMP)
 	echo "glabi=$(GLABI)" >> $(PCTMP)
 	echo "iflags=$(PUBLIC_IFLAGS)" >> $(PCTMP)
 	cat build/afeirsa.pc.in >> $(PCTMP)
