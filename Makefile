@@ -1,6 +1,11 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
 
+(%): %
+%.a:
+	$(AR) $(ARFLAGS) $@ $?
+	ranlib $@
+
 SOURCES = $(wildcard src/*.c)
 HEADERS = $(wildcard include/afeirsa/*.h)
 OBJECTS = $(SOURCES:.c=.o)
@@ -73,9 +78,7 @@ PREFIX = /usr/local
 .PHONY: all
 all: $(OUT)
 
-.NOTPARALLEL: $(OUT)
-$(OUT): $(OUT)($(OBJECTS))
-	ranlib $(OUT)
+$(OUT): $(OBJECTS)
 
 $(OBJECTS): $(HEADERS)
 
