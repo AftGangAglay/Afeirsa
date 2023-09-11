@@ -99,7 +99,13 @@ enum af_err af_mkctx(struct af_ctx* ctx, enum af_fidelity fidelity) {
 }
 
 enum af_err af_killctx(struct af_ctx* ctx) {
+	af_size_t i;
+
 	AF_CTX_CHK(ctx);
+
+	for(i = 0; i < ctx->extensions_len; ++i) {
+		free(ctx->extensions[i]);
+	}
 
 	ctx->free(ctx->extensions);
 	ctx->free(ctx->drawlists.handles);

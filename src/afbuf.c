@@ -74,6 +74,8 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 			return AF_ERR_NONE;
 #endif
 		}
+		ctx->free(buf->storage);
+
 		return AF_ERR_NONE;
 	}
 
