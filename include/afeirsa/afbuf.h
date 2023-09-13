@@ -23,7 +23,7 @@ enum af_buf_type {
 struct af_buf {
 	af_uint_t gl_handle;
 	enum af_buf_type type;
-	void* storage;
+	const void* storage;
 	af_size_t tex_width;
 	af_size_t size;
 };

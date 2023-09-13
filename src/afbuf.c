@@ -74,8 +74,6 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 			return AF_ERR_NONE;
 #endif
 		}
-		ctx->free(buf->storage);
-
 		return AF_ERR_NONE;
 	}
 
@@ -94,8 +92,6 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 			return AF_ERR_NONE;
 		}
 	}
-
-	ctx->free(buf->storage);
 
 	return AF_ERR_NONE;
 }
@@ -155,9 +151,7 @@ enum af_err af_upload(
 		}
 	}
 
-	if(!( buf->storage = ctx->malloc(size) )) return AF_ERR_MEM;
-
-	af_memcpy(buf->storage, data, size);
+	buf->storage = data;
 
 	return AF_ERR_NONE;
 }

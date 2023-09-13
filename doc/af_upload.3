@@ -17,8 +17,8 @@ af_size_t \fIsize\fP
 \fBaf_upload\fP uploads data to the graphics buffer object in the storage
 pointed to by \fIbuf\fP which was previously passed to \fBaf_mkbuf\fP(3).
 \fIdata\fP is a pointer to the host buffer of data of byte-length \fIsize\fP
-to be uploaded. \fIdata\fP is effectively copied during upload and does not
-need to be kept in-scope after a call to \fBaf_upload\fP for the buffer's
+to be uploaded. \fIdata\fP is not copied during upload and
+needs to be kept in-scope after a call to \fBaf_upload\fP for the buffer's
 contents to remain valid.
 
 The previous contents of the buffer are overwritten by this operation.
