@@ -43,6 +43,7 @@ extern "C" {
 # include <GL/glext.h>
 # include <GL/glu.h>
 # include <GL/glut.h>
+# include <GL/glx.h>
 # undef GL_GLEXT_PROTOTYPES
 #endif
 
