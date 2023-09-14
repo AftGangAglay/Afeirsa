@@ -153,9 +153,8 @@ enum af_err af_mkdrawlist(
 	AF_PARAM_CHK(ops);
 
 	drawlist->len = len;
-	if(!( drawlist->ops = ctx->malloc(len * sizeof(struct af_drawop)) )) {
-		return AF_ERR_MEM;
-	}
+	drawlist->ops = ctx->malloc(len * sizeof(struct af_drawop));
+	AF_VERIFY(drawlist->ops, AF_ERR_MEM);
 
 	af_memcpy(drawlist->ops, ops, len * sizeof(struct af_drawop));
 

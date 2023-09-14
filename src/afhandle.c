@@ -26,10 +26,8 @@ enum af_err af_mkhandle(
 
 	*handle = new_handle;
 
-	set->handles = ctx->realloc(
-						set->handles,
-						++set->len * sizeof(af_uint_t));
-	if(!( set->handles )) return AF_ERR_MEM;
+	set->handles = ctx->realloc(set->handles, ++set->len * sizeof(af_uint_t));
+	AF_VERIFY(set->handles, AF_ERR_MEM);
 	set->handles[set->len - 1] = new_handle;
 
 	return AF_ERR_NONE;
