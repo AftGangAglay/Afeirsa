@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-	enum af_err {
+enum af_err {
 	AF_ERR_NONE,
 	AF_ERR_UNKNOWN,
 	AF_ERR_BAD_PARAM,
