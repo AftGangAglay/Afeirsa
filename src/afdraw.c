@@ -60,7 +60,7 @@ enum af_err af_drawbuf(
 				af_size_t min;
 				af_size_t max;
 
-				/* GL procs might not be compile time constants (e.g. glad) */
+				/* GL procs might not be compile-time constants (e.g. glad) */
 				af_attrib_proc_t col_procs[2];
 				af_attrib_proc_t pos_procs[3];
 				af_attrib_proc_t uv_procs[4];
