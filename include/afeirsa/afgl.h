@@ -89,6 +89,10 @@ extern "C" {
 # define AF_BUFFER_FEATURE 1
 #endif
 
+#ifdef GL_VERSION_1_1
+# define AF_TEXTURE_FEATURE 1
+#endif
+
 #include <afeirsa/aferr.h>
 
 #define AF_GL_CHK \
