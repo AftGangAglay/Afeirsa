@@ -1,8 +1,12 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
 
-ifndef APPLE
-	GLXABI = 1
+ifdef APPLE
+else
+	ifdef WINDOWS
+	else
+		GLXABI = 1
+	endif
 endif
 
 XQUARTZ_ROOT = /opt/X11
@@ -18,5 +22,9 @@ else
 	ifdef APPLE
 		GLABI += -DAF_NSGL
 		LDLIBS += -framework GLUT -framework OpenGL
+	endif
+	ifdef WINDOWS
+		GLABI += -DAF_WGL
+		LDLIBS += -lopengl32 -lglu32
 	endif
 endif

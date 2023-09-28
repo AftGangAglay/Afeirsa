@@ -28,6 +28,10 @@ ifndef STDCC
 	CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
 endif
 
+ifdef WINDOWS
+	CFLAGS += -D_WINDOWS -Wno-long-long
+endif
+
 ifndef NO_STDLIB
 	CFLAGS += -DUSE_STDLIB
 endif

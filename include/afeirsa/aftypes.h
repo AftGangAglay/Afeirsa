@@ -10,15 +10,23 @@
 extern "C" {
 #endif
 
-	typedef unsigned char	af_uchar_t;
+typedef unsigned char	af_uchar_t;
 typedef unsigned short	af_ushort_t;
 typedef unsigned int	af_uint_t;
-typedef unsigned long	af_ulong_t;
+#ifdef _WINDOWS
+	typedef unsigned long long af_ulong_t;
+#else
+	typedef unsigned long af_ulong_t;
+#endif
 
 typedef signed char		af_schar_t;
 typedef signed short	af_sshort_t;
 typedef signed int		af_sint_t;
-typedef signed long		af_slong_t;
+#ifdef _WINDOWS
+	typedef signed long long af_slong_t;
+#else
+	typedef signed long af_slong_t;
+#endif
 
 typedef af_uchar_t		af_uint8_t;
 typedef af_ushort_t		af_uint16_t;

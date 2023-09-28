@@ -125,6 +125,7 @@ enum af_err af_upload(
 		}
 	}
 
+#ifdef AF_BUFFER_FEATURE
 	{
 		void (*bind_proc)(af_uint_t, af_uint_t);
 		void (*data_proc)(af_uint32_t, long, const void*, af_uint32_t);
@@ -134,7 +135,7 @@ enum af_err af_upload(
 			data_proc = glBufferData;
 		}
 #endif
-#ifdef GL_ARB_vertex_buffer_object
+#if defined(GL_ARB_vertex_buffer_object) && !defined(NO_EXT)
 		if(ctx->features.buffers == AF_ARB) {
 			bind_proc = glBindBufferARB;
 			data_proc = glBufferDataARB;
@@ -150,6 +151,7 @@ enum af_err af_upload(
 			return AF_ERR_NONE;
 		}
 	}
+#endif
 
 	buf->storage = data;
 
