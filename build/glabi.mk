@@ -12,7 +12,10 @@ endif
 XQUARTZ_ROOT = /opt/X11
 ifdef GLXABI
 	GLABI += -DAF_GLXABI
-	LDLIBS += -lGL -lglut -lGLU
+	LDLIBS += -lGL -lGLU
+	ifdef WANT_GLUT
+		LDLIBS += -lglut
+	endif
 
 	ifdef APPLE
 		LDLIBS += -L$(XQUARTZ_ROOT)/lib
@@ -21,7 +24,10 @@ ifdef GLXABI
 else
 	ifdef APPLE
 		GLABI += -DAF_NSGL
-		LDLIBS += -framework GLUT -framework OpenGL
+		LDLIBS += -framework OpenGL
+		ifdef WANT_GLUT
+			LDLIBS += -framework GLUT
+		endif
 	endif
 	ifdef WINDOWS
 		GLABI += -DAF_WGL

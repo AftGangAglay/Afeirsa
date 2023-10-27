@@ -10,6 +10,7 @@ To build, run `make'. With the following variables set appropriately.
          DEBUG	Perform a debug build with symbols and no optimizations
 BUILD_EXAMPLES	Build example programs alongside the library
          STDCC  Only use `cc' opts complying with X/Open LEGACY XCU `cc'
+     WANT_GLUT  Provide an appropriate GLUT environment for the GL ABI
 
 			Installing
 

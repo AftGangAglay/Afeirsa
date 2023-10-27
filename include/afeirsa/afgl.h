@@ -35,7 +35,9 @@ extern "C" {
 # include <OpenGL/gl.h>
 # include <OpenGL/glext.h>
 # include <OpenGL/glu.h>
-# include <GLUT/glut.h>
+# ifdef AF_WANT_GLUT
+#  include <GLUT/glut.h>
+# endif
 # undef GL_SILENCE_DEPRECATION
 #endif
 
@@ -53,7 +55,9 @@ extern "C" {
 # include <GL/gl.h>
 # include <GL/glext.h>
 # include <GL/glu.h>
-# include <GL/glut.h>
+# ifdef AF_WANT_GLUT
+#  include <GL/glut.h>
+# endif
 # include <GL/glx.h>
 # undef GL_GLEXT_PROTOTYPES
 #endif
