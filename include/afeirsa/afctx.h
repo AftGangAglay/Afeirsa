@@ -67,14 +67,6 @@ af_bool_t af_haveext(struct af_ctx* ctx, const char* ext);
 
 enum af_err af_setview(struct af_ctx* ctx, af_uint_t w, af_uint_t h);
 
-enum af_err af_mkhandle(
-		struct af_ctx* ctx,
-		struct af_handleset* set, af_uint_t* handle);
-
-enum af_err af_killhandle(
-		struct af_ctx* ctx,
-		struct af_handleset* set, af_uint_t handle);
-
 enum af_err af_flush(struct af_ctx* ctx);
 
 #ifdef __cplusplus

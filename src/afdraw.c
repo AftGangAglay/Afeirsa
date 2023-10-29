@@ -167,7 +167,8 @@ enum af_err af_mkdrawlist(
 
 	{
 		af_size_t i;
-		AF_CHK(af_mkhandle(ctx, &ctx->drawlists, &drawlist->gl_handle));
+		drawlist->gl_handle = glGenLists(1);
+		AF_GL_CHK;
 
 		glNewList(drawlist->gl_handle, GL_COMPILE);
 		{
@@ -216,8 +217,6 @@ enum af_err af_killdrawlist(struct af_ctx* ctx, struct af_drawlist* drawlist) {
 		return AF_ERR_NONE;
 #endif
 	}
-
-	AF_CHK(af_killhandle(ctx, &ctx->drawlists, drawlist->gl_handle));
 
 	glDeleteLists(drawlist->gl_handle, 1);
 	AF_GL_CHK;
