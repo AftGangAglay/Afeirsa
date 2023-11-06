@@ -118,6 +118,8 @@ enum af_err af_drawbuf(
 }
 
 enum af_err af_settex(struct af_ctx* ctx, struct af_buf* tex) {
+	int filter = tex->tex_filter ? GL_LINEAR : GL_NEAREST;
+
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(tex);
 	AF_VERIFY(tex->type == AF_BUF_TEX, AF_ERR_BAD_PARAM);
@@ -138,7 +140,9 @@ enum af_err af_settex(struct af_ctx* ctx, struct af_buf* tex) {
 	AF_GL_CHK;
 
 	/* No mipmapping yet */
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+	AF_GL_CHK;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 	AF_GL_CHK;
 
 	return AF_ERR_NONE;
