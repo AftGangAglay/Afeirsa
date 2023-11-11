@@ -118,6 +118,8 @@ enum af_err af_drawbuf(
 }
 
 enum af_err af_settex(struct af_ctx* ctx, struct af_buf* tex) {
+	int filter = tex->tex_filter ? GL_LINEAR : GL_NEAREST;
+
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(tex);
 	AF_VERIFY(tex->type == AF_BUF_TEX, AF_ERR_BAD_PARAM);
@@ -138,7 +140,14 @@ enum af_err af_settex(struct af_ctx* ctx, struct af_buf* tex) {
 	AF_GL_CHK;
 
 	/* No mipmapping yet */
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+	AF_GL_CHK;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+	AF_GL_CHK;
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	AF_GL_CHK;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	AF_GL_CHK;
 
 	return AF_ERR_NONE;
@@ -167,7 +176,8 @@ enum af_err af_mkdrawlist(
 
 	{
 		af_size_t i;
-		AF_CHK(af_mkhandle(ctx, &ctx->drawlists, &drawlist->gl_handle));
+		drawlist->gl_handle = glGenLists(1);
+		AF_GL_CHK;
 
 		glNewList(drawlist->gl_handle, GL_COMPILE);
 		{
@@ -216,8 +226,6 @@ enum af_err af_killdrawlist(struct af_ctx* ctx, struct af_drawlist* drawlist) {
 		return AF_ERR_NONE;
 #endif
 	}
-
-	AF_CHK(af_killhandle(ctx, &ctx->drawlists, drawlist->gl_handle));
 
 	glDeleteLists(drawlist->gl_handle, 1);
 	AF_GL_CHK;
