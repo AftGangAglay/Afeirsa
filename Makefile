@@ -1,10 +1,14 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 # Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
 
+ifndef RANLIB
+	RANLIB = ranlib
+endif
+
 (%): %
 %.a:
 	$(AR) $(ARFLAGS) $@ $?
-	ranlib $@
+	$(RANLIB) $@
 
 include build/glabi.mk
 
@@ -26,6 +30,10 @@ VERSION = $(shell cat VERSION)
 CFLAGS += -Iinclude -DVERSION=$(VERSION) -DAF_BUILD $(GLABI) $(PUBLIC_IFLAGS)
 ifndef STDCC
 	CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
+endif
+
+ifdef WINDOWS
+	CFLAGS += -D_WINDOWS -Wno-long-long
 endif
 
 ifndef NO_STDLIB

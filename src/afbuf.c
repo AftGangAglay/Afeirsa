@@ -7,6 +7,7 @@
 #include <afeirsa/afdefs.h>
 #include <afeirsa/afgl.h>
 
+#ifdef AF_BUFFER_FEATURE
 static af_uint_t af_gl_buf_type(enum af_buf_type type) {
 	switch(type) {
 		case AF_BUF_VERT:  return GL_ARRAY_BUFFER;
@@ -18,11 +19,10 @@ static af_uint_t af_gl_buf_type(enum af_buf_type type) {
 		default: return GL_NONE;
 	}
 }
+#endif
 
 enum af_err af_mkbuf(
 		struct af_ctx* ctx, struct af_buf* buf, enum af_buf_type type) {
-
-	af_uint_t gl_type = af_gl_buf_type(type);
 
 	AF_CTX_CHK(ctx);
 	AF_PARAM_CHK(buf);
@@ -34,7 +34,7 @@ enum af_err af_mkbuf(
 	 * Nice and consistent between buffers and textures, so it's nice.
 	 */
 	if(type == AF_BUF_TEX) {
-#ifdef GL_VERSION_1_1
+#ifdef AF_TEXTURE_FEATURE
 		if(ctx->features.multitexture) {
 			glGenTextures(1, &buf->gl_handle);
 			AF_GL_CHK;
@@ -43,14 +43,16 @@ enum af_err af_mkbuf(
 		return AF_ERR_NONE;
 	}
 
+#ifdef AF_BUFFER_FEATURE
 	{
+		af_uint_t gl_type = af_gl_buf_type(type);
 		void (*proc)(int, af_uint_t*);
-#ifdef GL_VERSION_2_0
+# ifdef GL_VERSION_2_0
 		if(ctx->features.buffers == AF_CORE) proc = glGenBuffers;
-#endif
-#ifdef GL_ARB_vertex_buffer_object
+# endif
+# if defined(GL_ARB_vertex_buffer_object) && !defined(NO_EXT)
 		if(ctx->features.buffers == AF_ARB) proc = glGenBuffersARB;
-#endif
+# endif
 
 		if(ctx->features.buffers && gl_type) {
 			proc(1, &buf->gl_handle);
@@ -58,6 +60,7 @@ enum af_err af_mkbuf(
 			return AF_ERR_NONE;
 		}
 	}
+#endif
 
 	return AF_ERR_NONE;
 }
@@ -68,7 +71,7 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 
 	if(buf->type == AF_BUF_TEX) {
 		if(ctx->features.multitexture) {
-#ifdef GL_VERSION_1_1
+#ifdef AF_TEXTURE_FEATURE
 			glDeleteTextures(1, &buf->gl_handle);
 			AF_GL_CHK;
 			return AF_ERR_NONE;
@@ -77,14 +80,15 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 		return AF_ERR_NONE;
 	}
 
+#ifdef AF_BUFFER_FEATURE
 	{
 		void (*proc)(int, const af_uint_t*);
-#ifdef GL_VERSION_2_0
+# ifdef GL_VERSION_2_0
 		if(ctx->features.buffers == AF_CORE) proc = glDeleteBuffers;
-#endif
-#ifdef GL_ARB_vertex_buffer_object
+# endif
+# if defined(GL_ARB_vertex_buffer_object) && !defined(NNO_EXT
 		if(ctx->features.buffers == AF_ARB) proc = glDeleteBuffersARB;
-#endif
+# endif
 
 		if(ctx->features.buffers) {
 			proc(1, &buf->gl_handle);
@@ -92,6 +96,7 @@ enum af_err af_killbuf(struct af_ctx* ctx, struct af_buf* buf) {
 			return AF_ERR_NONE;
 		}
 	}
+#endif
 
 	return AF_ERR_NONE;
 }
@@ -107,7 +112,7 @@ enum af_err af_upload(
 
 	if(buf->type == AF_BUF_TEX) {
 		if(ctx->features.multitexture) {
-#ifdef GL_VERSION_1_1
+#ifdef AF_TEXTURE_FEATURE
 			glBindTexture(GL_TEXTURE_2D, buf->gl_handle);
 			AF_GL_CHK;
 
@@ -125,21 +130,22 @@ enum af_err af_upload(
 		}
 	}
 
+#ifdef AF_BUFFER_FEATURE
 	{
 		void (*bind_proc)(af_uint_t, af_uint_t);
 		void (*data_proc)(af_uint32_t, long, const void*, af_uint32_t);
-#ifdef GL_VERSION_2_0
+# ifdef GL_VERSION_2_0
 		if(ctx->features.buffers == AF_CORE) {
 			bind_proc = glBindBuffer;
 			data_proc = glBufferData;
 		}
-#endif
-#ifdef GL_ARB_vertex_buffer_object
+# endif
+# if defined(GL_ARB_vertex_buffer_object) && !defined(NO_EXT)
 		if(ctx->features.buffers == AF_ARB) {
 			bind_proc = glBindBufferARB;
 			data_proc = glBufferDataARB;
 		}
-#endif
+# endif
 
 		if(ctx->features.buffers) {
 			af_uint_t type = af_gl_buf_type(buf->type);
@@ -150,6 +156,7 @@ enum af_err af_upload(
 			return AF_ERR_NONE;
 		}
 	}
+#endif
 
 	buf->storage = data;
 

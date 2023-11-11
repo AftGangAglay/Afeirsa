@@ -25,6 +25,7 @@ struct af_buf {
 	enum af_buf_type type;
 	const void* storage;
 	af_size_t tex_width;
+	af_bool_t tex_filter;
 	af_size_t size;
 };
 

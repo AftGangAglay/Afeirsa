@@ -10,12 +10,14 @@
 extern "C" {
 #endif
 
-#if !defined(AF_NSGL) && !defined(AF_GLXABI)
+#if !defined(AF_NSGL) && !defined(AF_GLXABI) && !defined(AF_WGL)
 # ifdef AF_BUILD
 #  pragma "Auto-detecting GL backend during in-tree build"
 # endif
 # ifdef __APPLE__
 #  define AF_NSGL
+# elif defined(_WINDOWS)
+#  define AF_WGL
 # else
 #  define AF_GLXABI
 # endif
@@ -33,8 +35,19 @@ extern "C" {
 # include <OpenGL/gl.h>
 # include <OpenGL/glext.h>
 # include <OpenGL/glu.h>
-# include <GLUT/glut.h>
+# ifdef AF_WANT_GLUT
+#  include <GLUT/glut.h>
+# endif
 # undef GL_SILENCE_DEPRECATION
+#endif
+
+#ifdef AF_WGL
+# define GL_GLEXT_PROTOTYPES
+# include <GL/gl.h>
+# include <GL/glext.h>
+# include <GL/glu.h>
+# include <GL/wgl.h>
+# undef GL_GLEXT_PROTOTYPES
 #endif
 
 #ifdef AF_GLXABI
@@ -42,7 +55,9 @@ extern "C" {
 # include <GL/gl.h>
 # include <GL/glext.h>
 # include <GL/glu.h>
-# include <GL/glut.h>
+# ifdef AF_WANT_GLUT
+#  include <GL/glut.h>
+# endif
 # include <GL/glx.h>
 # undef GL_GLEXT_PROTOTYPES
 #endif
@@ -69,6 +84,17 @@ extern "C" {
 # undef GL_VERSION_4_4
 # undef GL_VERSION_4_5
 # undef GL_VERSION_4_6
+#endif
+
+#if defined(GL_VERSION_2_0) || \
+	defined(GL_ARB_vertex_buffer_object) && !defined(NO_EXT)
+
+/* TODO: Feature macros for all used features. */
+# define AF_BUFFER_FEATURE 1
+#endif
+
+#ifdef GL_VERSION_1_1
+# define AF_TEXTURE_FEATURE 1
 #endif
 
 #include <afeirsa/aferr.h>
