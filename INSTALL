@@ -19,7 +19,7 @@ The install prefix can be configured with the `PREFIX' variable (Default is
 `/usr/local'). Root privileges may be required depending on the install
 location.
 
-This file is part of Afeirsa (https://github.com/Th3T3chn0G1t/Afeirsa) which is
+This file is part of Afeirsa (https://github.com/AftGangAglay/Afeirsa) which is
 licenced under the GNU Lesser General Public License v3.0 or later.
 
 Copyright (C) 2023 Emily "TTG" Banerjee <prs.ttg+afeirsa@pm.me>
