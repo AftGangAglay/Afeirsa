@@ -5,6 +5,14 @@ ifndef RANLIB
 	RANLIB = ranlib
 endif
 
+ifdef WINDOWS
+	RM = del
+endif
+
+define PATHREM
+	$(RM) $(subst /,\\,$(1))
+endef
+
 (%): %
 %.a:
 	$(AR) $(ARFLAGS) $@ $?
@@ -25,9 +33,7 @@ endif
 
 OUT = src/libafeirsa.a
 
-VERSION = $(shell cat VERSION)
-
-CFLAGS += -Iinclude -DVERSION=$(VERSION) -DAF_BUILD $(GLABI) $(PUBLIC_IFLAGS)
+CFLAGS += -Iinclude -DAF_BUILD $(GLABI) $(PUBLIC_IFLAGS)
 ifndef STDCC
 	CFLAGS += -std=c89 -Wall -Wextra -Werror -ansi -pedantic -pedantic-errors
 endif
@@ -72,6 +78,7 @@ $(OUT): $(OBJECTS)
 
 $(OBJECTS): $(HEADERS)
 
+ifndef WINDOWS
 .PHONY: install
 install: PCTMP := $(shell mktemp)
 install: $(OUT)
@@ -91,17 +98,18 @@ endif
 	install $(wildcard doc/*.3) $(PREFIX)/share/man/man3
 
 	echo "prefix=$(PREFIX)" > $(PCTMP)
-	echo "version=$(VERSION)" >> $(PCTMP)
+	echo "version=$(shell cat VERSION)" >> $(PCTMP)
 	echo "ldflags=$(LDLIBS)" >> $(PCTMP)
 	echo "glabi=$(GLABI)" >> $(PCTMP)
 	echo "iflags=$(PUBLIC_IFLAGS)" >> $(PCTMP)
 	cat build/afeirsa.pc.in >> $(PCTMP)
 	install $(PCTMP) $(PREFIX)/lib/pkgconfig/afeirsa.pc
+endif
 
 .PHONY: clean
 clean:
-	rm -f $(OBJECTS)
-	rm -f $(OUT)
+	$(call PATHREM,$(OBJECTS))
+	$(call PATHREM,$(OUT))
 
 ifdef BUILD_EXAMPLES
 include examples/examples.mk
