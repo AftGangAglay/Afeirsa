@@ -5,13 +5,16 @@ ifndef RANLIB
 	RANLIB = ranlib
 endif
 
-ifdef WINDOWS
+ifdef WINDOWS_SHELL
 	RM = del
-endif
-
 define PATHREM
 	$(RM) $(subst /,\\,$(1))
 endef
+else
+define PATHREM
+	$(RM) $(1)
+endef
+endif
 
 (%): %
 %.a:
