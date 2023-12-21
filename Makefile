@@ -56,16 +56,8 @@ endif
 
 ifdef DEBUG
 	CFLAGS += -g -D_DEBUG
-	ifndef STDCC
-		CFLAGS += -O0
-	endif
 else
-	CFLAGS += -DNDEBUG
-	ifndef STDCC
-		CFLAGS += -Ofast
-	else
-		CFLAGS += -O
-	endif
+	CFLAGS += -DNDEBUG -O
 endif
 
 PREFIX = /usr/local
