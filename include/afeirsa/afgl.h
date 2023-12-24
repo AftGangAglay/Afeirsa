@@ -42,12 +42,13 @@ extern "C" {
 #endif
 
 #ifdef AF_WGL
-# define GL_GLEXT_PROTOTYPES
+# ifndef WINGDIAPI
+#  define WINGDIAPI
+#  define APIENTRY
+#  define CALLBACK
+# endif
 # include <GL/gl.h>
-# include <GL/glext.h>
 # include <GL/glu.h>
-# include <GL/wgl.h>
-# undef GL_GLEXT_PROTOTYPES
 #endif
 
 #ifdef AF_GLXABI

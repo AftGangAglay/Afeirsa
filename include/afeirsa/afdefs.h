@@ -33,6 +33,10 @@ extern "C" {
 # endif
 #endif
 
+#ifndef AF_FALLTHROUGH
+# define AF_FALLTHROUGH
+#endif
+
 #define AF_ARRLEN(arr) (sizeof((arr)) / sizeof((arr)[0]))
 #define AF_MEMBSIZE(t, member) (sizeof((t*) 0)->member)
 
