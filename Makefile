@@ -105,7 +105,3 @@ endif
 clean:
 	$(call PATHREM,$(OBJECTS))
 	$(call PATHREM,$(OUT))
-
-ifdef BUILD_EXAMPLES
-include examples/examples.mk
-endif

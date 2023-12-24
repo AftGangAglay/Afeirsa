@@ -8,7 +8,6 @@ To build, run `make'. With the following variables set appropriately.
    GL10_COMPAT	Restricts core feature usage to OpenGL 1.0
         NO_EXT	Disables use of OpenGL extensions
          DEBUG	Perform a debug build with symbols and no optimizations
-BUILD_EXAMPLES	Build example programs alongside the library
          STDCC  Only use `cc' opts complying with X/Open LEGACY XCU `cc'
      WANT_GLUT  Provide an appropriate GLUT environment for the GL ABI
 
