@@ -42,10 +42,14 @@ extern "C" {
 #endif
 
 #ifdef AF_WGL
-# ifndef WINGDIAPI
-#  define WINGDIAPI
-#  define APIENTRY
-#  define CALLBACK
+/*
+ * This is super annoying as it leaks a load of garbage into scope.
+ * `windows.h' is needed for declaration attributes.
+ * `stddef.h' is needed for `wchar_t'.
+ */
+# ifndef AF_WGL_SUPPRESS_AUX
+#  include <windows.h>
+#  include <stddef.h>
 # endif
 # include <GL/gl.h>
 # include <GL/glu.h>
