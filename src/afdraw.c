@@ -145,11 +145,6 @@ enum af_err af_settex(struct af_ctx* ctx, struct af_buf* tex) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 	AF_GL_CHK;
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	AF_GL_CHK;
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	AF_GL_CHK;
-
 	return AF_ERR_NONE;
 }
 
