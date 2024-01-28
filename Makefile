@@ -42,7 +42,7 @@ ifndef STDCC
 endif
 
 ifdef WINDOWS
-	CFLAGS += -D_WINDOWS -Wno-long-long
+	CFLAGS += -Wno-long-long
 endif
 
 ifndef NO_STDLIB

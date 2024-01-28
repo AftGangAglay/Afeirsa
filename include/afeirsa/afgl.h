@@ -16,7 +16,7 @@ extern "C" {
 # endif
 # ifdef __APPLE__
 #  define AF_NSGL
-# elif defined(_WINDOWS)
+# elif defined(_WIN32)
 #  define AF_WGL
 # else
 #  define AF_GLXABI
